@@ -520,7 +520,7 @@ metExploreD3.GraphPanel = {
 		var jsonParsed = metExploreD3.GraphUtils.decodeJSON(json);
 		if(jsonParsed){
 			var networkVizSession = _metExploreViz.getSessionById("viz");
-			
+
 			var oldForce = networkVizSession.getForce();
 			// Reset visualisation---less than a ms
 			if(oldForce!=undefined){
@@ -537,11 +537,11 @@ metExploreD3.GraphPanel = {
 
 
 			if(jsonParsed.comparedPanels)
-			{	
+			{
 				jsonParsed.comparedPanels.forEach(function(comparedPanel){
 					_metExploreViz.addComparedPanel(new ComparedPanel(comparedPanel.panel, comparedPanel.visible, comparedPanel.parent, comparedPanel.title));
 				});
-			}	
+			}
 
 			if(jsonParsed.mappings)
 			{
@@ -549,16 +549,16 @@ metExploreD3.GraphPanel = {
 					var mapping = new Mapping(mapping.name, mapping.conditions, mapping.targetLabel);
 					_metExploreViz.addMapping(mapping);
 				});
-			}		
+			}
 
 			if(jsonParsed.generalStyle)
 			{
-				var oldGeneralStyle = metExploreD3.getGeneralStyle();                   
+				var oldGeneralStyle = metExploreD3.getGeneralStyle();
 				var style = new GeneralStyle(oldGeneralStyle.getWebsiteName(), jsonParsed.generalStyle.colorMinMappingContinuous, jsonParsed.generalStyle.colorMaxMappingContinuous, jsonParsed.generalStyle.maxReactionThreshold, jsonParsed.generalStyle.displayLabelsForOpt, jsonParsed.generalStyle.displayLinksForOpt, jsonParsed.generalStyle.displayConvexhulls, jsonParsed.generalStyle.clustered,  oldGeneralStyle.isDisplayedCaption(), oldGeneralStyle.hasEventForNodeInfo(), oldGeneralStyle.loadButtonIsHidden(), oldGeneralStyle.windowsAlertIsDisable());
 				metExploreD3.setGeneralStyle(style);
 			}
 
-			var sessions = jsonParsed.sessions;				
+			var sessions = jsonParsed.sessions;
 			for (var key in sessions) {
 				if(key!='viz')
 		        {
@@ -566,30 +566,30 @@ metExploreD3.GraphPanel = {
 				    networkVizSession.setVizEngine("D3");
 				    networkVizSession.setId(key);
 				    networkVizSession.setLinked(sessions[key].linked);
-				    _metExploreViz.addSession(networkVizSession);	
-					
+				    _metExploreViz.addSession(networkVizSession);
+
 
 					var accord = Ext.getCmp("comparePanel");
 		        	var comparedPanel = _metExploreViz.getComparedPanelById(key);
-		        	
+
 					var item = [
 		        		{
 		        			id:comparedPanel.getParent(),
-		        			title:comparedPanel.getTitle(), 
-		        			html:"<div id=\""+comparedPanel.getParent()+"\" height=\"100%\" width=\"100%\"></div>", 
-		        			flex: 1, 
-		        			closable: true, 
-		        			collapsible: true, 
-		        			collapseDirection: "left" 
+		        			title:comparedPanel.getTitle(),
+		        			html:"<div id=\""+comparedPanel.getParent()+"\" height=\"100%\" width=\"100%\"></div>",
+		        			flex: 1,
+		        			closable: true,
+		        			collapsible: true,
+		        			collapseDirection: "left"
 		        		}
 		        	];
-					
+
 					accord.add(item);
 					accord.expand();
 
 					metExploreD3.fireEventArg("comparePanel", 'initiateviz', key);
 					//metExploreD3.GraphNetwork.refreshSvg(panelId);
-				}	
+				}
 
 
 				if(sessions[key].colorMappings)
@@ -597,7 +597,7 @@ metExploreD3.GraphPanel = {
 					sessions[key].colorMappings.forEach(function(colorMapping){
 						networkVizSession.addColorMapping(colorMapping.name, colorMapping.value);
 					});
-				}	
+				}
 
 				var anim = sessions[key].animated;
 
@@ -635,31 +635,31 @@ metExploreD3.GraphPanel = {
 						});
 					}
 				});
-				
+
 				networkData.setId(key);
 
 				if(key=='viz') _metExploreViz.setInitialData(_metExploreViz.cloneNetworkData(networkData));
 				networkVizSession.setD3Data(networkData);
 
-				
+
 
 				if(sessions[key].selectedNodes)
 				{
 					sessions[key].selectedNodes.forEach(function(nodeId){
 						networkVizSession.addSelectedNode(nodeId);
 					});
-				}			
-				
+				}
+
 
 				if(_metExploreViz.getMappingsLength()>0 && key=="viz" && !metExploreD3.getGeneralStyle().windowsAlertIsDisable())
 				{
 					metExploreD3.displayMessageYesNo("Mapping",'Do you want keep mappings.',function(btn){
 		                if(btn=="yes")
-		                {   
+		                {
 		                    _metExploreViz.getMappingsSet().forEach(function(mapping){
 		                    	metExploreD3.GraphMapping.reloadMapping(mapping);
 			                	metExploreD3.fireEventArg('selectMappingVisu', "jsonmapping", mapping);
-		                    }); 
+		                    });
 			                metExploreD3.fireEventArg('buttonRefresh', "reloadMapping", true);
 		                }
 		                else
@@ -674,19 +674,19 @@ metExploreD3.GraphPanel = {
 		                	// _metExploreViz.resetMappings();
 		                }
 		           });
-					
+
 				}
 
 				if(sessions[key].mapped)
 				{
 					networkVizSession.setMapped(sessions[key].mapped);
-				}	
+				}
 
 				if(sessions[key].mappingDataType)
 				{
 					networkVizSession.setMappingDataType(sessions[key].mappingDataType);
-				}	
-				
+				}
+
 				if(sessions[key].activeMapping)
 				{
 					networkVizSession.setActiveMapping(sessions[key].activeMapping);
@@ -698,9 +698,9 @@ metExploreD3.GraphPanel = {
 			{
 				var style = new LinkStyle(jsonParsed.linkStyle.size, jsonParsed.linkStyle.lineWidth, jsonParsed.linkStyle.markerWidth, jsonParsed.linkStyle.markerHeight, jsonParsed.linkStyle.markerInColor, jsonParsed.linkStyle.markerOutColor, jsonParsed.linkStyle.markerStrokeColor, jsonParsed.linkStyle.markerStrokeWidth, jsonParsed.linkStyle.strokeColor);
 				metExploreD3.setLinkStyle(style);
-				
+
 			}
-				
+
 			if(jsonParsed.metaboliteStyle)
 			{
 				var style = new MetaboliteStyle(jsonParsed.metaboliteStyle.height, jsonParsed.metaboliteStyle.width, jsonParsed.metaboliteStyle.rx, jsonParsed.metaboliteStyle.ry, jsonParsed.metaboliteStyle.fontSize, jsonParsed.metaboliteStyle.strokeWidth, jsonParsed.metaboliteStyle.label, jsonParsed.metaboliteStyle.strokeColor);
@@ -714,7 +714,7 @@ metExploreD3.GraphPanel = {
 			}
 
 			for (var key in sessions) {
-				metExploreD3.GraphNetwork.refreshSvg(key);	
+				metExploreD3.GraphNetwork.refreshSvg(key);
 		    }
 		}
 	},

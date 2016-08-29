@@ -641,15 +641,12 @@ metExploreD3.GraphPanel = {
 				if(key=='viz') _metExploreViz.setInitialData(_metExploreViz.cloneNetworkData(networkData));
 				networkVizSession.setD3Data(networkData);
 
-
-
 				if(sessions[key].selectedNodes)
 				{
 					sessions[key].selectedNodes.forEach(function(nodeId){
 						networkVizSession.addSelectedNode(nodeId);
 					});
 				}
-
 
 				if(_metExploreViz.getMappingsLength()>0 && key=="viz" && !metExploreD3.getGeneralStyle().windowsAlertIsDisable())
 				{

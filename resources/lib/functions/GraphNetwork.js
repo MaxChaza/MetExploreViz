@@ -1187,12 +1187,10 @@ metExploreD3.GraphNetwork = {
 		var vizRect = document.getElementById(panel).getBoundingClientRect();
 		var hViz = vizRect.bottom - vizRect.top-20;
 		var hGC = graphComponentRect.bottom - graphComponentRect.top;
-		console.log(hGC);
 		var scale = metExploreD3.getScaleById(panel);
 		var zoomListener = scale.getZoom();
 
 		var newScale = hViz*zoomListener.scale()/hGC;
-		console.log(newScale);
 		scale.setZoomScale(newScale);
 
 		var wGC = graphComponentRect.right-graphComponentRect.left;

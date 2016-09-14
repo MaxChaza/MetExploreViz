@@ -1415,13 +1415,55 @@ metExploreD3.GraphNode = {
 		// console.log("----Viz: FINISH refresh/ all "+timeall);
 	},
 
+	collide :function(nodes, alpha) {
+		var padding = 5;
+		// var nodes = d3.select("#viz").select("#D3viz").select("#graphComponent").selectAll("g.node");
+	    	
+	 //    var session = _metExploreViz.getSessionById("viz");
+		
+		// var networkData=session.getD3Data();
+		// var nodes = networkData.getNodes()
+
+		
+	  var quadtree = d3.geom.quadtree(nodes);
+	  return function(d) {
+	    var r = 20,
+	        nx1 = d.x - r,
+	        nx2 = d.x + r,
+	        ny1 = d.y - r,
+	        ny2 = d.y + r;
+	    quadtree.visit(function(quad, x1, y1, x2, y2) {
+	    	// console.log(quad);
+	      if (quad.point && (quad.point !== d)) {
+	        var x = d.x - quad.point.x,
+	            y = d.y - quad.point.y,
+	            l = Math.sqrt(x * x + y * y);
+	        if (l < r) {
+	          l = (l - r) / l * alpha;
+	          d.x -= x *= l;
+	          d.y -= y *= l;
+	          quad.point.x += x;
+	          quad.point.y += y;
+	        }
+	      }
+	      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+	    });
+	  };
+	},
+
 	/*******************************************
 	* Fonction call for each update
 	* @param {} panel : The panel where the action is launched
 	*/
 	tick :function(panel) {
+		var that = this;
+		var session = _metExploreViz.getSessionById(panel);
+		var networkData=session.getD3Data();
+		var nodes = networkData.getNodes()
+
 		d3.select("#"+panel).select("#D3viz").select("#graphComponent")
 			.selectAll("g.node")
+			.each(that.collide(nodes, 0.6))
 			.attr("cx", function(d) {
 				return d.x;
 			})

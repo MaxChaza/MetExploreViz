@@ -865,52 +865,77 @@ metExploreD3.GraphNetwork = {
 			.attr("height", "50")
 			.attr("transform", "translate(80,10) scale(.5)");
 
-		d3
-			.select("#"+panel)
-			.select("#D3viz")
-			.append("svg:g")
-			.attr("class","whiteBlack").attr("id","whiteBlack")
-			.attr('x', (w-100))
-			.attr('y', 100)
-			.on("click", function(){
-				if(d3.select("#"+panel).style("-webkit-filter").search('grayscale') == -1
-					&& d3.select("#"+panel).style("filter").search('grayscale') == -1)
-					d3.select("#"+panel).style("filter", "grayscale(100%)").style("-webkit-filter", "grayscale(100%)");
-				else
-					d3.select("#"+panel).style("filter", "").style("-webkit-filter", "");
-			})
-			.style("cursor", "hand")
-			.style("visibility", "hidden")
-			.append("image")
-			.attr("xlink:href", document.location.href.split("index.html")[0] + "resources/icons/blackWhite.png")
-			.attr("width", "50")
-			.attr("height", "50")
-			.attr("transform", "translate("+(w-100)+",100) scale(0.5)");
 
-		d3
-			.select("#"+panel)
-			.select("#D3viz")
-			.append("svg:g")
-			.attr("class","invertColor").attr("id","invertColor")
-			.attr('x', (w-100))
+
+
+
+
+		var container = d3.select("#"+panel).select("#D3viz"),
+            sliderLineWidth = 2,
+            width = 120;
+                    
+        var slider = container.append("svg:g").attr("class", "slider")
+			.attr('x', (w-160))
 			.attr('y', 150)
-			.on("click", function(){
-				if(d3.select("#"+panel).style("-webkit-filter").search('invert') == -1
-					&& d3.select("#"+panel).style("filter").search('invert') == -1)
-					d3.select("#"+panel).style("filter", "invert(100%)").style("-webkit-filter", "invert(100%)");
-				else
-					d3.select("#"+panel).style("filter", "").style("-webkit-filter", "");
+          	.attr("transform", "translate("+(w-160)+",150) ");
+        
+        // safe layer for slider ability (provide correct & smooth mouse move)
+        var rect = slider.append("svg:rect")
+			.attr("class", "layer")
+			.attr("width", width)
+		  .style("fill", "#CCC")
+			.attr("height", 2);
+        
+        // util
+        var _dragSliderLine;      
+
+        var sliderCircle = slider.append("circle")    
+	        .attr("class", "cursor")    
+			.attr("cx", 10)
+			.attr("cy", 1)
+			.attr("r", 6)
+			.style("fill", "#5FA2DD")
+			.attr("stroke-width", 1);  
+         
+        var circledrag = d3.behavior.drag()
+			.on("dragstart",function(d, i){
+				d3.event.sourceEvent.stopPropagation();
+				d3.selectAll("#D3viz").style("cursor", "move");
+				// console.log(d);console.log(d3.event);console.log(i);
 			})
-			.style("cursor", "hand")
-			.style("visibility", "hidden")
-			.append("image")
-			.attr("xlink:href", document.location.href.split("index.html")[0] + "resources/icons/invertColor.svg")
-			.attr("width", "50")
-			.attr("height", "50")
-			.attr("transform", "translate("+(w-100)+",150) scale(0.5)");
+			.on("drag",function(d, i){
+				if(d3.event.x>=10 && d3.event.x<=110)
+				{
+					slider.select('.cursor')
+						.attr("cx", d3.event.x)
+						.attr("x", d3.event.x);
+				}
+			});
 
-		
+        sliderCircle.call(circledrag);
 
+
+
+          // 	"mousedown", function(e){    
+          // 	console.log(e);      
+          //   d3.event.preventDefault();
+          //   _dragSliderLine = this;
+          
+          //   this.style.cursor = "move";
+          //   document.body.focus();
+          //   document.onselectstart = function () { return false; };
+            
+          //   return false;
+          // });        
+        
+
+          //   d3.event.preventDefault();
+          //   if (_dragSliderLine != null){
+          //     _dragSliderLine.style.cursor = "pointer";
+          //     _dragSliderLine = null;
+          //   }
+          
+      
 		d3
 			.select("#"+panel)
 			.select("#D3viz")
@@ -3786,6 +3811,62 @@ setTimeout(
 			.attr("width", "50")
 			.attr("height", "50")
 			.attr("transform", "translate(80,10) scale(.5)");
+
+
+		var margin = {right: 50, left: 50},
+		    width = w - margin.left - margin.right,
+		    height = h;
+
+		var xSlider = d3.scale.linear()
+		    .domain([0, 180])
+		    .range([0, width])
+		    .clamp(true);
+
+		var slider = d3
+			.select("#"+panel)
+			.select("#D3viz")
+			.append("svg:g")
+			.attr("class","sliderCollision").attr("id","sliderCollision")
+			.attr('x', (w-110))
+			.attr('y', 100)
+			.attr("transform", "translate("+(w-110)+",10) scale(1)");
+
+		slider.append("line")
+		    .attr("class", "track")
+		    .attr("x1", xSlider.range()[0])
+		    .attr("x2", xSlider.range()[1])
+		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+		    .attr("class", "track-inset")
+		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+		    .attr("class", "track-overlay")
+		    // .call(d3.drag()
+		    //     .on("start.interrupt", function() { slider.interrupt(); })
+		    //     .on("start drag", function() { hue(xSlider.invert(d3.event.x)); }));
+
+		slider.insert("g", ".track-overlay")
+		    .attr("class", "ticks")
+		    .attr("transform", "translate(0," + 18 + ")")
+		  .selectAll("text")
+		  .data(xSlider.ticks(10))
+		  .enter().append("text")
+		    .attr("x", xSlider)
+		    .attr("text-anchor", "middle")
+		    .text(function(d) { return d + "°"; });
+
+		var handle = slider.insert("circle", ".track-overlay")
+		    .attr("class", "handle")
+		    .attr("r", 9);
+
+		slider.transition() // Gratuitous intro!
+		    .duration(750)
+		    .tween("hue", function() {
+		      var i = d3.interpolate(0, 70);
+		      return function(t) { hue(i(t)); };
+		    });
+
+		function hue(h) {
+		  handle.attr("cx", xSlider(h));
+		}
 
 		d3
 			.select("#"+panel)

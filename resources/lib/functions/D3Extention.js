@@ -52,12 +52,18 @@ d3.selection.enter.prototype =
                     
         var sliderThis=this;
         
+        sliderThis
+			.append("svg:text")
+			.text(title);
+
         // safe layer for slider ability (provide correct & smooth mouse move)
         var rect = sliderThis.append("svg:rect")
 			.attr("class", "layer")
 			.attr("width", 120)
-		  .style("fill", "#CCC")
-			.attr("height", 2);
+		  	.style("fill", "#CCC")
+			.attr("height", 2)
+			.attr('y', 10)
+			.attr("transform", "translate(0,10)");
         
         // util
         var _dragSliderLine;      
@@ -65,10 +71,12 @@ d3.selection.enter.prototype =
         var sliderCircle = sliderThis.append("circle")    
 	        .attr("class", "cursor")    
 			.attr("cx", 10)
-			.attr("cy", 1)
+			.attr("cy", 11)
 			.attr("r", 6)
 			.style("fill", "#5FA2DD")
-			.attr("stroke-width", 1);  
+			.attr("stroke-width", 1)
+			.attr('y', 10)
+			.attr("transform", "translate(0,10)");
          
         var circledrag = d3.behavior.drag()
 			.on("dragstart",function(d, i){

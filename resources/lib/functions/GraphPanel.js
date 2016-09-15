@@ -36,7 +36,7 @@ metExploreD3.GraphPanel = {
 			d3.select("#"+panel)
 				.select("#D3viz")
 				.select("#foreignObject")	
-				.attr("transform", "translate("+($("#"+panel).width()-300)+",100) scale(1)")
+				.attr("transform", "translate("+($("#"+panel).width()-300)+",140) scale(1)")
 
 			// Redefine Zoom and brush
 			var scaleZ = scale.getZoomScale();
@@ -308,6 +308,7 @@ metExploreD3.GraphPanel = {
 		
 		if(d3.select("#"+panel).select("#D3viz").select("#buttonZoomIn")[0][0]!=null
 			&& d3.select("#"+panel).select("#D3viz").select("#buttonZoomOut")[0][0]!=null
+			&& d3.select("#"+panel).select("#D3viz").select("#sliderLinkDistance")[0][0]!=null
 			&& d3.select("#"+panel).select("#D3viz").select("#buttonHand")[0][0]!=null)
 		{	
 			var x = d3
@@ -323,6 +324,7 @@ metExploreD3.GraphPanel = {
 				.select("#buttonZoomIn")
 				.attr("transform", "translate("+deltaX+",0) scale(1)");
 				
+
 			x = d3
 				.select("#"+panel)
 				.select("#D3viz")
@@ -335,44 +337,30 @@ metExploreD3.GraphPanel = {
 				.select("#D3viz")
 				.select("#buttonZoomOut")
 				.attr("transform", "translate("+deltaX+",0) scale(1)");
+			
+
 			x = d3
 				.select("#"+panel)
 				.select("#D3viz")
 				.select("#buttonHand")
 				.attr('x');
 			deltaX = w-160-x;					
-			
+
 		    d3
 				.select("#"+panel)
 				.select("#D3viz")
 				.select("#buttonHand")
 				.attr("transform", "translate("+deltaX+",0) scale(1)");
+				
 
-			x = d3
-				.select("#"+panel)
-				.select("#D3viz")
-				.select("#whiteBlack")
-				.attr('x');
-			deltaX = w-100-x;					
-			
 		    d3
 				.select("#"+panel)
 				.select("#D3viz")
-				.select("#whiteBlack")
-				.attr("transform", "translate("+deltaX+",0) scale(1)");
+				.select("#sliderLinkDistance")
+				.attr('x', (w-160))
+				.attr('y', 100)
+	          	.attr("transform", "translate("+(w-160)+",100) ");  
 
-			x = d3
-				.select("#"+panel)
-				.select("#D3viz")
-				.select("#invertColor")
-				.attr('x');
-			deltaX = w-100-x;					
-			
-		    d3
-				.select("#"+panel)
-				.select("#D3viz")
-				.select("#invertColor")
-				.attr("transform", "translate("+deltaX+",0) scale(1)");
 		}
 		if(session!=undefined)  
 		{

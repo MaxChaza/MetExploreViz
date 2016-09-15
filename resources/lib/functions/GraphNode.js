@@ -1415,7 +1415,7 @@ metExploreD3.GraphNode = {
 		// console.log("----Viz: FINISH refresh/ all "+timeall);
 	},
 
-	collide :function(nodes, alpha) {
+	collide :function(nodes, rayon) {
 		var padding = 5;
 		// var nodes = d3.select("#viz").select("#D3viz").select("#graphComponent").selectAll("g.node");
 	    	
@@ -1427,7 +1427,7 @@ metExploreD3.GraphNode = {
 		
 	  var quadtree = d3.geom.quadtree(nodes);
 	  return function(d) {
-	    var r = 20,
+	    var r = rayon,
 	        nx1 = d.x - r,
 	        nx2 = d.x + r,
 	        ny1 = d.y - r,
@@ -1439,7 +1439,7 @@ metExploreD3.GraphNode = {
 	            y = d.y - quad.point.y,
 	            l = Math.sqrt(x * x + y * y);
 	        if (l < r) {
-	          l = (l - r) / l * alpha;
+	          l = (l - r) / l * 0.6;
 	          d.x -= x *= l;
 	          d.y -= y *= l;
 	          quad.point.x += x;
@@ -1461,11 +1461,19 @@ metExploreD3.GraphNode = {
 		var networkData=session.getD3Data();
 		var nodes = networkData.getNodes()
 
-		var generalStyle = metExploreD3.getGeneralStyle();
-		console.log(generalStyle.getCollision());
+		
+		var reactionStyle = metExploreD3.getReactionStyle();
+		var metaboliteStyle = metExploreD3.getMetaboliteStyle();
+
+		var tab = [reactionStyle.getWidth(), reactionStyle.getHeight(), metaboliteStyle.getWidth(), metaboliteStyle.getHeight()];
+		var r = Math.max.apply(null, tab)+5;
+
+		console.log(reactionStyle.getWidth());
+		console.log(r);
+
 		d3.select("#"+panel).select("#D3viz").select("#graphComponent")
 			.selectAll("g.node")
-			.each(that.collide(nodes, 0.4))
+			.each(that.collide(nodes, r))
 			.attr("cx", function(d) {
 				return d.x;
 			})

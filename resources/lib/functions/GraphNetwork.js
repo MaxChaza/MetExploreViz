@@ -781,7 +781,7 @@ metExploreD3.GraphNetwork = {
 			.select("#D3viz")
 			.append("foreignObject")	
 			.attr('x', w-300)
-			.attr('y', 100)
+			.attr('y', 140)
 			.attr("width", "500")
 			.attr("height", "500")
 			.append("xhtml:div")
@@ -866,196 +866,88 @@ metExploreD3.GraphNetwork = {
 			.attr("transform", "translate(80,10) scale(.5)");
 
 
+        var sliderLinkDistance = d3.select("#"+panel).select("#D3viz")
+        	.append("svg:g")
+        	.attr("class", "sliderLinkDistance")
+        	.attr("id", "sliderLinkDistance")
+			.attr('x', (w-160))
+			.attr('y', 100)
+          	.attr("transform", "translate("+(w-160)+",100) ");        
+    
+		function startLinkDistance(){
+			if(session!=undefined)  
+			{
+				// We stop the previous animation
+				if(session.isLinked()){
+					var sessionMain = _metExploreViz.getSessionById('viz');
+					if(sessionMain!=undefined)
+					{
+						var force = sessionMain.getForce();
+						if(force!=undefined)  
+						{		
+							force.stop();
+						}	
+					}
+				}
+				else
+				{	
+					
+					var force = session.getForce();
+					if(force!=undefined)  
+					{
+						force.stop();
+												
+					}
+				}
+			}
+		}
 
+		function stopLinkDistance(x){
+			var force = session.getForce();
+			var linkStyle = metExploreD3.getLinkStyle();  
+			force.linkDistance(x);
 
-
-            var sliderCollision = d3.select("#"+panel).select("#D3viz")
-            	.append("svg:g")
-            	.attr("class", "sliderCollision")
-				.attr('x', (w-160))
-				.attr('y', 200)
-	          	.attr("transform", "translate("+(w-160)+",200) ");        
-        
-			function startCollision(){
-				if(session!=undefined)  
-				{
-					// We stop the previous animation
-					if(session.isLinked()){
-						var sessionMain = _metExploreViz.getSessionById('viz');
-						if(sessionMain!=undefined)
-						{
+			if(session!=undefined)  
+			{
+				// We stop the previous animation
+				if(session.isLinked()){
+					var sessionMain = _metExploreViz.getSessionById('viz');
+					if(sessionMain!=undefined)
+					{
+						var animLinked=metExploreD3.GraphNetwork.isAnimated(sessionMain.getId());
+						if (animLinked=='true') {
 							var force = sessionMain.getForce();
 							if(force!=undefined)  
 							{		
-								force.stop();
-							}	
-						}
-					}
-					else
-					{	
-						
-						var force = session.getForce();
-						if(force!=undefined)  
-						{
-							force.stop();
-													
-						}
-					}
-				}
-			}
-
-			function stopCollision(x){
-				var force = session.getForce();
-				var generalStyle = metExploreD3.getGeneralStyle();
-
-				var scaleCollision = d3.scale.linear()
-				    .domain([0, 100])
-				    .range([0, 1]);
-
-				generalStyle.setCollision(scaleCollision(x));
-
-				if(session!=undefined)  
-				{
-					// We stop the previous animation
-					if(session.isLinked()){
-						var sessionMain = _metExploreViz.getSessionById('viz');
-						if(sessionMain!=undefined)
-						{
-							var animLinked=metExploreD3.GraphNetwork.isAnimated(sessionMain.getId());
-							if (animLinked=='true') {
-								var force = sessionMain.getForce();
-								if(force!=undefined)  
-								{		
-									if((metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == 'true') 
-										|| (metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == null)) {
-											force.start();
-									}
+								if((metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == 'true') 
+									|| (metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == null)) {
+										force.start();
 								}
 							}
 						}
 					}
-					else
-					{	
-						
-						var force = session.getForce();
-						var animLinked=metExploreD3.GraphNetwork.isAnimated(session.getId())
-							if (animLinked=='true') {
-								var force = session.getForce();
-								if(force!=undefined)  
-								{		
-									if((metExploreD3.GraphNetwork.isAnimated(session.getId()) == 'true') || (metExploreD3.GraphNetwork.isAnimated(session.getId()) == null)) {
-											force.start();
-									}
-								}
-							}
-					}
 				}
-			}
-
-			sliderCollision.addSlider('Collision', startCollision, stopCollision);
-
-
-
-            var sliderLinkDistance = d3.select("#"+panel).select("#D3viz")
-            	.append("svg:g")
-            	.attr("class", "sliderLinkDistance")
-				.attr('x', (w-160))
-				.attr('y', 150)
-	          	.attr("transform", "translate("+(w-160)+",150) ");        
-        
-			function startLinkDistance(){
-				if(session!=undefined)  
-				{
-					// We stop the previous animation
-					if(session.isLinked()){
-						var sessionMain = _metExploreViz.getSessionById('viz');
-						if(sessionMain!=undefined)
-						{
-							var force = sessionMain.getForce();
+				else
+				{	
+					
+					var force = session.getForce();
+					var animLinked=metExploreD3.GraphNetwork.isAnimated(session.getId())
+						if (animLinked=='true') {
+							var force = session.getForce();
 							if(force!=undefined)  
 							{		
-								force.stop();
-							}	
-						}
-					}
-					else
-					{	
-						
-						var force = session.getForce();
-						if(force!=undefined)  
-						{
-							force.stop();
-													
-						}
-					}
-				}
-			}
-
-			function stopLinkDistance(x){
-				var force = session.getForce();
-				var linkStyle = metExploreD3.getLinkStyle();  
-				force.linkDistance(x);
-
-				if(session!=undefined)  
-				{
-					// We stop the previous animation
-					if(session.isLinked()){
-						var sessionMain = _metExploreViz.getSessionById('viz');
-						if(sessionMain!=undefined)
-						{
-							var animLinked=metExploreD3.GraphNetwork.isAnimated(sessionMain.getId());
-							if (animLinked=='true') {
-								var force = sessionMain.getForce();
-								if(force!=undefined)  
-								{		
-									if((metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == 'true') 
-										|| (metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == null)) {
-											force.start();
-									}
+								if((metExploreD3.GraphNetwork.isAnimated(session.getId()) == 'true') || (metExploreD3.GraphNetwork.isAnimated(session.getId()) == null)) {
+										force.start();
 								}
 							}
 						}
-					}
-					else
-					{	
-						
-						var force = session.getForce();
-						var animLinked=metExploreD3.GraphNetwork.isAnimated(session.getId())
-							if (animLinked=='true') {
-								var force = session.getForce();
-								if(force!=undefined)  
-								{		
-									if((metExploreD3.GraphNetwork.isAnimated(session.getId()) == 'true') || (metExploreD3.GraphNetwork.isAnimated(session.getId()) == null)) {
-											force.start();
-									}
-								}
-							}
-					}
 				}
 			}
+		}
 
-			sliderLinkDistance.addSlider('LinkDistance', startLinkDistance, stopLinkDistance);
+		sliderLinkDistance.addSlider('Link size :', startLinkDistance, stopLinkDistance);
 
 
-          // 	"mousedown", function(e){    
-          // 	console.log(e);      
-          //   d3.event.preventDefault();
-          //   _dragSliderLine = this;
-          
-          //   this.style.cursor = "move";
-          //   document.body.focus();
-          //   document.onselectstart = function () { return false; };
-            
-          //   return false;
-          // });        
-        
-
-          //   d3.event.preventDefault();
-          //   if (_dragSliderLine != null){
-          //     _dragSliderLine.style.cursor = "pointer";
-          //     _dragSliderLine = null;
-          //   }
-          
       
 		d3
 			.select("#"+panel)
@@ -3934,60 +3826,88 @@ setTimeout(
 			.attr("transform", "translate(80,10) scale(.5)");
 
 
-		var margin = {right: 50, left: 50},
-		    width = w - margin.left - margin.right,
-		    height = h;
 
-		var xSlider = d3.scale.linear()
-		    .domain([0, 180])
-		    .range([0, width])
-		    .clamp(true);
+            var sliderLinkDistance = d3.select("#"+panel).select("#D3viz")
+            	.append("svg:g")
+            	.attr("class", "sliderLinkDistance")
+				.attr('x', (w-160))
+				.attr('y', 150)
+	          	.attr("transform", "translate("+(w-160)+",150) ");        
+        
+			function startLinkDistance(){
+				if(session!=undefined)  
+				{
+					// We stop the previous animation
+					if(session.isLinked()){
+						var sessionMain = _metExploreViz.getSessionById('viz');
+						if(sessionMain!=undefined)
+						{
+							var force = sessionMain.getForce();
+							if(force!=undefined)  
+							{		
+								force.stop();
+							}	
+						}
+					}
+					else
+					{	
+						
+						var force = session.getForce();
+						if(force!=undefined)  
+						{
+							force.stop();
+													
+						}
+					}
+				}
+			}
 
-		var slider = d3
-			.select("#"+panel)
-			.select("#D3viz")
-			.append("svg:g")
-			.attr("class","sliderCollision").attr("id","sliderCollision")
-			.attr('x', (w-110))
-			.attr('y', 100)
-			.attr("transform", "translate("+(w-110)+",10) scale(1)");
+			function stopLinkDistance(x){
+				var force = session.getForce();
+				var linkStyle = metExploreD3.getLinkStyle();  
+				force.linkDistance(x);
 
-		slider.append("line")
-		    .attr("class", "track")
-		    .attr("x1", xSlider.range()[0])
-		    .attr("x2", xSlider.range()[1])
-		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-		    .attr("class", "track-inset")
-		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-		    .attr("class", "track-overlay")
-		    // .call(d3.drag()
-		    //     .on("start.interrupt", function() { slider.interrupt(); })
-		    //     .on("start drag", function() { hue(xSlider.invert(d3.event.x)); }));
+				if(session!=undefined)  
+				{
+					// We stop the previous animation
+					if(session.isLinked()){
+						var sessionMain = _metExploreViz.getSessionById('viz');
+						if(sessionMain!=undefined)
+						{
+							var animLinked=metExploreD3.GraphNetwork.isAnimated(sessionMain.getId());
+							if (animLinked=='true') {
+								var force = sessionMain.getForce();
+								if(force!=undefined)  
+								{		
+									if((metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == 'true') 
+										|| (metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == null)) {
+											force.start();
+									}
+								}
+							}
+						}
+					}
+					else
+					{	
+						
+						var force = session.getForce();
+						var animLinked=metExploreD3.GraphNetwork.isAnimated(session.getId())
+							if (animLinked=='true') {
+								var force = session.getForce();
+								if(force!=undefined)  
+								{		
+									if((metExploreD3.GraphNetwork.isAnimated(session.getId()) == 'true') || (metExploreD3.GraphNetwork.isAnimated(session.getId()) == null)) {
+											force.start();
+									}
+								}
+							}
+					}
+				}
+			}
 
-		slider.insert("g", ".track-overlay")
-		    .attr("class", "ticks")
-		    .attr("transform", "translate(0," + 18 + ")")
-		  .selectAll("text")
-		  .data(xSlider.ticks(10))
-		  .enter().append("text")
-		    .attr("x", xSlider)
-		    .attr("text-anchor", "middle")
-		    .text(function(d) { return d + "°"; });
+			sliderLinkDistance.addSlider('Link size :', startLinkDistance, stopLinkDistance);
 
-		var handle = slider.insert("circle", ".track-overlay")
-		    .attr("class", "handle")
-		    .attr("r", 9);
 
-		slider.transition() // Gratuitous intro!
-		    .duration(750)
-		    .tween("hue", function() {
-		      var i = d3.interpolate(0, 70);
-		      return function(t) { hue(i(t)); };
-		    });
-
-		function hue(h) {
-		  handle.attr("cx", xSlider(h));
-		}
 
 		d3
 			.select("#"+panel)

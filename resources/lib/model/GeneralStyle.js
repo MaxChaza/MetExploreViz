@@ -6,7 +6,7 @@
  /**
  * General style
  */
-var GeneralStyle = function(siteName, minContinuous, maxContinuous, max, dispLabel, dispLink, dispConvexhull, clust, dispCaption, eventForNodeInfo, loadButtonHidden, windowsAlertDisable,collis){
+var GeneralStyle = function(siteName, minContinuous, maxContinuous, max, dispLabel, dispLink, dispConvexhull, clust, dispCaption, eventForNodeInfo, loadButtonHidden, windowsAlertDisable){
     this.websiteName = siteName;
     this.colorMinMappingContinuous = minContinuous;
     this.colorMaxMappingContinuous = maxContinuous;
@@ -19,7 +19,6 @@ var GeneralStyle = function(siteName, minContinuous, maxContinuous, max, dispLab
     this.loadButtonHidden=false;
     this.windowsAlertDisable=false;
     this.clustered=clust;
-    this.collision=collis;
 };
 
 GeneralStyle.prototype = {
@@ -61,9 +60,6 @@ GeneralStyle.prototype = {
 //If there are less than this number of reactions in the store, then different graph components are displayed.
     getReactionThreshold:function(){return this.maxReactionThreshold;},
     setReactionThreshold:function(maxReaction){this.maxReactionThreshold = maxReaction;},
-    
-    getCollision:function(){return this.collision;},
-    setCollision:function(collis){this.collision = collis;},
 
     hasEventForNodeInfo:function(){return this.eventForNodeInfo;},
     setEventForNodeInfo:function(bool){this.eventForNodeInfo = bool;},

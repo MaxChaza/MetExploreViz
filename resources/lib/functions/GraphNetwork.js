@@ -869,51 +869,172 @@ metExploreD3.GraphNetwork = {
 
 
 
-
-		var container = d3.select("#"+panel).select("#D3viz"),
-            sliderLineWidth = 2,
-            width = 120;
-                    
-        var slider = container.append("svg:g").attr("class", "slider")
-			.attr('x', (w-160))
-			.attr('y', 150)
-          	.attr("transform", "translate("+(w-160)+",150) ");
+            var sliderCollision = d3.select("#"+panel).select("#D3viz")
+            	.append("svg:g")
+            	.attr("class", "sliderCollision")
+				.attr('x', (w-160))
+				.attr('y', 200)
+	          	.attr("transform", "translate("+(w-160)+",200) ");        
         
-        // safe layer for slider ability (provide correct & smooth mouse move)
-        var rect = slider.append("svg:rect")
-			.attr("class", "layer")
-			.attr("width", width)
-		  .style("fill", "#CCC")
-			.attr("height", 2);
-        
-        // util
-        var _dragSliderLine;      
-
-        var sliderCircle = slider.append("circle")    
-	        .attr("class", "cursor")    
-			.attr("cx", 10)
-			.attr("cy", 1)
-			.attr("r", 6)
-			.style("fill", "#5FA2DD")
-			.attr("stroke-width", 1);  
-         
-        var circledrag = d3.behavior.drag()
-			.on("dragstart",function(d, i){
-				d3.event.sourceEvent.stopPropagation();
-				d3.selectAll("#D3viz").style("cursor", "move");
-				// console.log(d);console.log(d3.event);console.log(i);
-			})
-			.on("drag",function(d, i){
-				if(d3.event.x>=10 && d3.event.x<=110)
+			function startCollision(){
+				if(session!=undefined)  
 				{
-					slider.select('.cursor')
-						.attr("cx", d3.event.x)
-						.attr("x", d3.event.x);
+					// We stop the previous animation
+					if(session.isLinked()){
+						var sessionMain = _metExploreViz.getSessionById('viz');
+						if(sessionMain!=undefined)
+						{
+							var force = sessionMain.getForce();
+							if(force!=undefined)  
+							{		
+								force.stop();
+							}	
+						}
+					}
+					else
+					{	
+						
+						var force = session.getForce();
+						if(force!=undefined)  
+						{
+							force.stop();
+													
+						}
+					}
 				}
-			});
+			}
 
-        sliderCircle.call(circledrag);
+			function stopCollision(x){
+				var force = session.getForce();
+				var generalStyle = metExploreD3.getGeneralStyle();
 
+				var scaleCollision = d3.scale.linear()
+				    .domain([0, 100])
+				    .range([0, 1]);
+
+				generalStyle.setCollision(scaleCollision(x));
+
+				if(session!=undefined)  
+				{
+					// We stop the previous animation
+					if(session.isLinked()){
+						var sessionMain = _metExploreViz.getSessionById('viz');
+						if(sessionMain!=undefined)
+						{
+							var animLinked=metExploreD3.GraphNetwork.isAnimated(sessionMain.getId());
+							if (animLinked=='true') {
+								var force = sessionMain.getForce();
+								if(force!=undefined)  
+								{		
+									if((metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == 'true') 
+										|| (metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == null)) {
+											force.start();
+									}
+								}
+							}
+						}
+					}
+					else
+					{	
+						
+						var force = session.getForce();
+						var animLinked=metExploreD3.GraphNetwork.isAnimated(session.getId())
+							if (animLinked=='true') {
+								var force = session.getForce();
+								if(force!=undefined)  
+								{		
+									if((metExploreD3.GraphNetwork.isAnimated(session.getId()) == 'true') || (metExploreD3.GraphNetwork.isAnimated(session.getId()) == null)) {
+											force.start();
+									}
+								}
+							}
+					}
+				}
+			}
+
+			sliderCollision.addSlider('Collision', startCollision, stopCollision);
+
+
+
+            var sliderLinkDistance = d3.select("#"+panel).select("#D3viz")
+            	.append("svg:g")
+            	.attr("class", "sliderLinkDistance")
+				.attr('x', (w-160))
+				.attr('y', 150)
+	          	.attr("transform", "translate("+(w-160)+",150) ");        
+        
+			function startLinkDistance(){
+				if(session!=undefined)  
+				{
+					// We stop the previous animation
+					if(session.isLinked()){
+						var sessionMain = _metExploreViz.getSessionById('viz');
+						if(sessionMain!=undefined)
+						{
+							var force = sessionMain.getForce();
+							if(force!=undefined)  
+							{		
+								force.stop();
+							}	
+						}
+					}
+					else
+					{	
+						
+						var force = session.getForce();
+						if(force!=undefined)  
+						{
+							force.stop();
+													
+						}
+					}
+				}
+			}
+
+			function stopLinkDistance(x){
+				var force = session.getForce();
+				var linkStyle = metExploreD3.getLinkStyle();  
+				force.linkDistance(x);
+
+				if(session!=undefined)  
+				{
+					// We stop the previous animation
+					if(session.isLinked()){
+						var sessionMain = _metExploreViz.getSessionById('viz');
+						if(sessionMain!=undefined)
+						{
+							var animLinked=metExploreD3.GraphNetwork.isAnimated(sessionMain.getId());
+							if (animLinked=='true') {
+								var force = sessionMain.getForce();
+								if(force!=undefined)  
+								{		
+									if((metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == 'true') 
+										|| (metExploreD3.GraphNetwork.isAnimated(sessionMain.getId()) == null)) {
+											force.start();
+									}
+								}
+							}
+						}
+					}
+					else
+					{	
+						
+						var force = session.getForce();
+						var animLinked=metExploreD3.GraphNetwork.isAnimated(session.getId())
+							if (animLinked=='true') {
+								var force = session.getForce();
+								if(force!=undefined)  
+								{		
+									if((metExploreD3.GraphNetwork.isAnimated(session.getId()) == 'true') || (metExploreD3.GraphNetwork.isAnimated(session.getId()) == null)) {
+											force.start();
+									}
+								}
+							}
+					}
+				}
+			}
+
+			sliderLinkDistance.addSlider('LinkDistance', startLinkDistance, stopLinkDistance);
 
 
           // 	"mousedown", function(e){    

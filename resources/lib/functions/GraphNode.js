@@ -1461,9 +1461,11 @@ metExploreD3.GraphNode = {
 		var networkData=session.getD3Data();
 		var nodes = networkData.getNodes()
 
+		var generalStyle = metExploreD3.getGeneralStyle();
+		console.log(generalStyle.getCollision());
 		d3.select("#"+panel).select("#D3viz").select("#graphComponent")
 			.selectAll("g.node")
-			.each(that.collide(nodes, 0.6))
+			.each(that.collide(nodes, 0.4))
 			.attr("cx", function(d) {
 				return d.x;
 			})

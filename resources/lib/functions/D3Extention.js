@@ -47,3 +47,53 @@ d3.selection.enter.prototype =
 			.style("stroke-width", strokewidth);
 	};
 
+	d3.selection.prototype.addSlider = function(title, start, end) {
+		
+                    
+        var sliderThis=this;
+        
+        // safe layer for slider ability (provide correct & smooth mouse move)
+        var rect = sliderThis.append("svg:rect")
+			.attr("class", "layer")
+			.attr("width", 120)
+		  .style("fill", "#CCC")
+			.attr("height", 2);
+        
+        // util
+        var _dragSliderLine;      
+
+        var sliderCircle = sliderThis.append("circle")    
+	        .attr("class", "cursor")    
+			.attr("cx", 10)
+			.attr("cy", 1)
+			.attr("r", 6)
+			.style("fill", "#5FA2DD")
+			.attr("stroke-width", 1);  
+         
+        var circledrag = d3.behavior.drag()
+			.on("dragstart",function(d, i){
+				d3.event.sourceEvent.stopPropagation();
+				d3.selectAll("#D3viz").style("cursor", "move");
+				
+				start();
+				
+				// console.log(d);console.log(d3.event);console.log(i);
+			})
+			.on("drag",function(d, i){
+				if(d3.event.x>=10 && d3.event.x<=110)
+				{
+					sliderThis.select('.cursor')
+						.attr("cx", d3.event.x)
+						.attr("x", d3.event.x);
+				}
+			})
+			.on("dragend",function(d, i){
+				// console.log(d);console.log(d3.event);console.log(i);
+				var x = sliderThis.select('.cursor')
+						.attr("cx");
+				end(x-10);
+			});
+
+        sliderCircle.call(circledrag);
+	};
+

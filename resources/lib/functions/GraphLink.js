@@ -1483,7 +1483,15 @@ metExploreD3.GraphLink = {
 			.remove();
 		
 		d3.select("#"+parent).select("#D3viz").select("#graphComponent").selectAll("path.link")
-			.data(networkData.getLinks())
+			.data(
+				networkData.getLinks()
+					.filter(
+						function(link){ 
+							var nodes = networkData.getNodes();
+							return nodes[link.getTarget()].isDisplayed() || nodes[link.getSource()].isDisplayed();
+						}
+					)
+				)
 			.enter()
 			.insert("svg:g",":first-child")
 			.attr("class", "linkGroup")

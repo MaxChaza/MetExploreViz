@@ -2,7 +2,28 @@
  * NodeData class
  * For now, only contains the id
  */
-var NodeData = function(name, compart, dbIdentifier, ec, id, reactionReversibility, isSideCompound, biologicalType, isSelected, labelVisible, svg, svgWidth, svgHeight, mappings, isDuplicated, identifier, pathW, lock, label) {
+var NodeData = function(
+        name, 
+        compart, 
+        dbIdentifier,
+        ec,
+        id,
+        reactionReversibility,
+        isSideCompound, 
+        biologicalType, 
+        isSelected, 
+        labelVisible,
+        svg, 
+        svgWidth, 
+        svgHeight, 
+        mappings, 
+        isDuplicated, 
+        identifier, 
+        pathW, 
+        lock, 
+        label,
+        displayed
+    ) {
         this.name=name;
         this.dbIdentifier = dbIdentifier ;
         this.ec = ec;
@@ -19,6 +40,7 @@ var NodeData = function(name, compart, dbIdentifier, ec, id, reactionReversibili
         this.svg = svg;
         this.svgWidth = svgWidth;
         this.svgHeight = svgHeight;
+        this.displayed = displayed;
 
         if(pathW==undefined)
             this.pathways =[];
@@ -53,7 +75,6 @@ NodeData.prototype = {
     isSelected :function(){
       return this.selected;
     },
-
     setIsSelected : function(b){
       this.selected = b;
     },
@@ -61,7 +82,6 @@ NodeData.prototype = {
     isLocked :function(){
       return this.locked;
     },
-
     setLocked : function(b){
       this.locked = b;
     },
@@ -69,9 +89,16 @@ NodeData.prototype = {
     isDuplicated :function(){
       return this.duplicated;
     },
-
     setIsDuplicated : function(b){
       this.duplicated = b;
+    },
+
+
+    isDisplayed :function(){
+      return this.displayed;
+    },
+    setIsDisplayed : function(b){
+      this.displayed = b;
     },
 
     getIsSideCompound : function(){

@@ -1428,6 +1428,10 @@ metExploreD3.GraphUtils = {
 				    	if(node.getIsSideCompound()!=undefined){
 							networkJSON+="\"isSideCompound\":"+JSON.stringify(node.getIsSideCompound())+",";
 				    	}
+
+				    	if(node.isDisplayed()!=undefined){
+							networkJSON+="\"isDisplayed\":"+JSON.stringify(node.isDisplayed())+",";
+				    	}
 				    	
 				    	networkJSON+="\"biologicalType\":"+JSON.stringify(node.getBiologicalType())+",";
 				    	

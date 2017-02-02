@@ -922,7 +922,7 @@ metExploreD3.GraphNode = {
 
 		// For each node we append a division of the class "node"
 		metExploreD3.GraphNode.node = d3.select("#"+metExploreD3.GraphNode.panelParent).select("#D3viz").select("#graphComponent").selectAll("g.node")
-			.data(networkData.getNodes()).enter()
+			.data(networkData.getNodes().filter(function(node){ return node.isDisplayed();})).enter()
 				.append("svg:g").attr("class", "node")
 				.attr("id", function(node){ return "node"+node.getId(); })
 				.call(node_drag)
@@ -1323,7 +1323,7 @@ metExploreD3.GraphNode = {
 				return d.isDuplicated(); })
 			.style("stroke-opacity",0.5)
 			.each(function(node){
-				var clone = new NodeData(node.getName(), node.getCompartment(), node.getDbIdentifier(), node.getEC(), node.getIdentifier(), node.getReactionReversibility(), node.getIsSideCompound(), node.getBiologicalType(), node.isSelected(), node.getLabelVisible(), node.getSvg(), node.getSvgWidth(), node.getSvgHeight(), undefined, node.isDuplicated(), node.getIdentifier(), node.getPathways(), node.isLocked(), node.getLabel());
+				var clone = new NodeData(node.getName(), node.getCompartment(), node.getDbIdentifier(), node.getEC(), node.getIdentifier(), node.getReactionReversibility(), node.getIsSideCompound(), node.getBiologicalType(), node.isSelected(), node.getLabelVisible(), node.getSvg(), node.getSvgWidth(), node.getSvgHeight(), undefined, node.isDuplicated(), node.getIdentifier(), node.getPathways(), node.isLocked(), node.getLabel(), node.isDisplayed());
 
 				metExploreD3.fireEventParentWebSite("sideCompound", clone);	
 			})

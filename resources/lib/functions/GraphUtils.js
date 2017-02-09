@@ -1367,6 +1367,7 @@ metExploreD3.GraphUtils = {
 				networkJSON+=",\n\"generalStyle\":"+JSON.stringify(metExploreD3.getGeneralStyle());
 				networkJSON+=",\n\"metaboliteStyle\":"+JSON.stringify(metExploreD3.getMetaboliteStyle());
 				networkJSON+=",\n\"comparedPanels\":"+JSON.stringify(_metExploreViz.comparedPanels);
+				networkJSON+=",\n\"useDegreeOfInterest\":"+JSON.stringify(_metExploreViz.useDegreeOfInterest());
 				networkJSON+=",\n\"linkedByTypeOfMetabolite\":"+JSON.stringify(_metExploreViz.linkedByTypeOfMetabolite);
 							    
 			    networkJSON+=",\n\"sessions\":{";

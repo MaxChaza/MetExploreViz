@@ -5,6 +5,7 @@
 "generalStyle":{"websiteName":"MetExplore","colorMinMappingContinuous":"yellow","colorMaxMappingContinuous":"blue","maxReactionThreshold":500,"displayLabelsForOpt":false,"displayLinksForOpt":false,"displayConvexhulls":false,"eventForNodeInfo":true,"loadButtonHidden":false,"windowsAlertDisable":false},
 "metaboliteStyle":{"height":14,"width":14,"rx":7,"ry":7,"strokeWidth":1,"fontSize":7,"label":"name","strokeColor":"#b2ae92"},
 "comparedPanels":[],
+"useDegreeOfInterest":true,
 "linkedByTypeOfMetabolite":false,
 "sessions":{
 "viz":{

@@ -107,6 +107,7 @@ metExploreD3.GraphFunction = {
 			});	
 		};
     },
+
     testFlux : function(){
 		
 		var networkData = _metExploreViz.getSessionById('viz').getD3Data();	
@@ -120,8 +121,8 @@ metExploreD3.GraphFunction = {
 				var val = color(value);
 				return val;
 			});	
-		
     },
+
     test : function(){
 		
 		var networkData = _metExploreViz.getSessionById('viz').getD3Data();	
@@ -144,6 +145,7 @@ metExploreD3.GraphFunction = {
 			});	
 		};
     },
+
     test2 : function(){
 		
 		var networkData = _metExploreViz.getSessionById('viz').getD3Data();	
@@ -1133,6 +1135,7 @@ metExploreD3.GraphFunction = {
 		else
 			return false;
 	},
+
 	// Based on the reaction id
 	// return the reaction id without the _back mention
 	getReactionIdWithoutBack : function(id) {
@@ -1256,51 +1259,50 @@ metExploreD3.GraphFunction = {
 		return T;
 	},
 
-	/*
-		/** ********Get strongly connected components*********** */
+	/** ********Get strongly connected components*********** */
 
-		// Tarjan algorithm to detect all strongly connected
-		// components in a graph.
-		// The method will return an array of arrays containing all
-		// the strongly connected component nodes.
-		// algorithm tarjan is
-		// input: graph G = (V, E)
-		// output: set of strongly connected components (sets of
-		// vertices)
-		// index := 0
-		// S := empty
-		// for each v in V do
-		// if (v.index is undefined) then
-		// strongconnect(v)
-		// end if
-		// end for
-		// function strongconnect(v)
-		// // Set the depth index for v to the smallest unused index
-		// v.index := index
-		// v.lowlink := index
-		// index := index + 1
-		// S.push(v)
-		// // Consider successors of v
-		// for each (v, w) in E do
-		// if (w.index is undefined) then
-		// // Successor w has not yet been visited; recurse on it
-		// strongconnect(w)
-		// v.lowlink := min(v.lowlink, w.lowlink)
-		// else if (w is in S) then
-		// // Successor w is in stack S and hence in the current SCC
-		// v.lowlink := min(v.lowlink, w.index)
-		// end if
-		// end for
-		//     // If v is a root node, pop the stack and generate an SCC
-		//     if (v.lowlink = v.index) then
-		//       start a new strongly connected component
-		//       repeat
-		//         w := S.pop()
-		//         add w to current strongly connected component
-		//       until (w = v)
-		//       output the current strongly connected component
-		//     end if
-		//   end function
+	// Tarjan algorithm to detect all strongly connected
+	// components in a graph.
+	// The method will return an array of arrays containing all
+	// the strongly connected component nodes.
+	// algorithm tarjan is
+	// input: graph G = (V, E)
+	// output: set of strongly connected components (sets of
+	// vertices)
+	// index := 0
+	// S := empty
+	// for each v in V do
+	// if (v.index is undefined) then
+	// strongconnect(v)
+	// end if
+	// end for
+	// function strongconnect(v)
+	// // Set the depth index for v to the smallest unused index
+	// v.index := index
+	// v.lowlink := index
+	// index := index + 1
+	// S.push(v)
+	// // Consider successors of v
+	// for each (v, w) in E do
+	// if (w.index is undefined) then
+	// // Successor w has not yet been visited; recurse on it
+	// strongconnect(w)
+	// v.lowlink := min(v.lowlink, w.lowlink)
+	// else if (w is in S) then
+	// // Successor w is in stack S and hence in the current SCC
+	// v.lowlink := min(v.lowlink, w.index)
+	// end if
+	// end for
+	//     // If v is a root node, pop the stack and generate an SCC
+	//     if (v.lowlink = v.index) then
+	//       start a new strongly connected component
+	//       repeat
+	//         w := S.pop()
+	//         add w to current strongly connected component
+	//       until (w = v)
+	//       output the current strongly connected component
+	//     end if
+	//   end function
 
 	getStronglyConnectedComponents : function(graph) {
 		if (graph == null)
@@ -1408,79 +1410,79 @@ metExploreD3.GraphFunction = {
 	 * http://strathausen.eu
 	 */
 	/*
-		// subnetwork: function(){
-		// var graph=this.extractSubNetwork();
-		// var session=this.getNetworkVizSession();
-		// console.log("Graph computation done");
-		// var subEmpty=true;
-		// for(var i in
-		// this.getNetworkVizSession().getSelectedNodes()){
-		// var
-		// nodeID=this.getNetworkVizSession().getSelectedNodes()[i];
-		// if (graph.nodes[nodeID].inSubNet)
-		// subEmpty=false;
-		// }
-		// if(subEmpty)
-		// Ext.Msg.alert("Warning","There is no path between the
-		// selected nodes !!");
-		// else
-		// {
-		// var vis = d3.select("body").select("#D3viz");
-		// vis.selectAll("g.node").filter(function(d) {return
-		// d.getBiologicalType() =='metabolite' }).filter(function(d)
-		// {var id=d.getId(); return graph.nodes[id].inSubNet})
-		// .selectAll("circle")
-		// .transition().duration(4000).style("stroke","red").style("stroke-width","2");
-		// vis.selectAll("g.node").filter(function(d) {return
-		// d.getBiologicalType() =='reaction' })
-		// .filter(function(d) {
-		// var id=d.getId();
-		// var backID=d.getId()+"_back";
-		// if (graph.nodes[backID]==undefined)
-		// return graph.nodes[id].inSubNet;
-		// else
-		// return
-		// (graph.nodes[id].inSubNet||graph.nodes[backID].inSubNet)})
-		// .selectAll("rect")
-		// .transition().duration(4000).style("stroke","red").style("stroke-width","2");
-		// vis.selectAll("path.link")
-		// .filter(function(d){
-		// var source=d.source.getId();
-		// var target=d.target.getId();
-		// console.log(d.source.getId());
-		// if(d.source.getBiologicalType() =='reaction')
-		// {
-		// var back=source+"_back";
-		// if(graph.nodes[back]==undefined)//The source is a
-		// reaction and is not reversible then look for
-		// source-target
-		// return
-		// (graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)
-		// else//the source is reversible then look for source
-		// target and source_back target
-		// {
-		// console.log("---"+graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)||(graph.nodes[back].inSubNet&&graph.nodes[target].inSubNet)
-		// return
-		// (graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)||(graph.nodes[back].inSubNet&&graph.nodes[target].inSubNet)
-		// }
-		// }
-		// else
-		// {
-		// var back=target+"_back";
-		// if(graph.nodes[back]==undefined)//The target is a
-		// reaction and is not reversible
-		// return
-		// (graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)
-		// else
-		// {
-		// console.log("---"+graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)||(graph.nodes[source].inSubNet&&graph.nodes[back].inSubNet);
-		// return
-		// (graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)||(graph.nodes[source].inSubNet&&graph.nodes[back].inSubNet)
-		// }
-		// }
-		// })
-		// .transition().duration(4000).style("stroke","red").style("stroke-width","2");
-		// }
-		// },
+	// subnetwork: function(){
+	// var graph=this.extractSubNetwork();
+	// var session=this.getNetworkVizSession();
+	// console.log("Graph computation done");
+	// var subEmpty=true;
+	// for(var i in
+	// this.getNetworkVizSession().getSelectedNodes()){
+	// var
+	// nodeID=this.getNetworkVizSession().getSelectedNodes()[i];
+	// if (graph.nodes[nodeID].inSubNet)
+	// subEmpty=false;
+	// }
+	// if(subEmpty)
+	// Ext.Msg.alert("Warning","There is no path between the
+	// selected nodes !!");
+	// else
+	// {
+	// var vis = d3.select("body").select("#D3viz");
+	// vis.selectAll("g.node").filter(function(d) {return
+	// d.getBiologicalType() =='metabolite' }).filter(function(d)
+	// {var id=d.getId(); return graph.nodes[id].inSubNet})
+	// .selectAll("circle")
+	// .transition().duration(4000).style("stroke","red").style("stroke-width","2");
+	// vis.selectAll("g.node").filter(function(d) {return
+	// d.getBiologicalType() =='reaction' })
+	// .filter(function(d) {
+	// var id=d.getId();
+	// var backID=d.getId()+"_back";
+	// if (graph.nodes[backID]==undefined)
+	// return graph.nodes[id].inSubNet;
+	// else
+	// return
+	// (graph.nodes[id].inSubNet||graph.nodes[backID].inSubNet)})
+	// .selectAll("rect")
+	// .transition().duration(4000).style("stroke","red").style("stroke-width","2");
+	// vis.selectAll("path.link")
+	// .filter(function(d){
+	// var source=d.source.getId();
+	// var target=d.target.getId();
+	// console.log(d.source.getId());
+	// if(d.source.getBiologicalType() =='reaction')
+	// {
+	// var back=source+"_back";
+	// if(graph.nodes[back]==undefined)//The source is a
+	// reaction and is not reversible then look for
+	// source-target
+	// return
+	// (graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)
+	// else//the source is reversible then look for source
+	// target and source_back target
+	// {
+	// console.log("---"+graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)||(graph.nodes[back].inSubNet&&graph.nodes[target].inSubNet)
+	// return
+	// (graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)||(graph.nodes[back].inSubNet&&graph.nodes[target].inSubNet)
+	// }
+	// }
+	// else
+	// {
+	// var back=target+"_back";
+	// if(graph.nodes[back]==undefined)//The target is a
+	// reaction and is not reversible
+	// return
+	// (graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)
+	// else
+	// {
+	// console.log("---"+graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)||(graph.nodes[source].inSubNet&&graph.nodes[back].inSubNet);
+	// return
+	// (graph.nodes[source].inSubNet&&graph.nodes[target].inSubNet)||(graph.nodes[source].inSubNet&&graph.nodes[back].inSubNet)
+	// }
+	// }
+	// })
+	// .transition().duration(4000).style("stroke","red").style("stroke-width","2");
+	// }
+	// },
 	*/
 }

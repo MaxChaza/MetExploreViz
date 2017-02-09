@@ -1488,7 +1488,10 @@ metExploreD3.GraphLink = {
 					.filter(
 						function(link){ 
 							var nodes = networkData.getNodes();
-							return nodes[link.getTarget()].isDisplayed() || nodes[link.getSource()].isDisplayed();
+							if(typeof link.getTarget()=="number")
+								return nodes[link.getTarget()].isDisplayed() || nodes[link.getSource()].isDisplayed();
+							else	
+								return link.getTarget().isDisplayed() || link.getSource().isDisplayed();
 						}
 					)
 				)

@@ -742,6 +742,11 @@ metExploreD3.GraphPanel = {
 					metExploreD3.setReactionStyle(style);
 				}
 
+				if(jsonParsed.useDegreeOfInterest)
+				{
+					_metExploreViz.setUseDegreeOfInterest(jsonParsed.useDegreeOfInterest);
+				}
+
 				for (var key in sessions) {
 					metExploreD3.GraphNetwork.refreshSvg(key);	
 			    }

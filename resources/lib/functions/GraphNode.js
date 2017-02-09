@@ -239,8 +239,6 @@ metExploreD3.GraphNode = {
 			})
 			.attr("width", "40%")
 			.attr("height", "40%");
-			
-
 	},
 
 	/*******************************************
@@ -370,8 +368,7 @@ metExploreD3.GraphNode = {
 				return linkStyle.getSize()/2+maxDim;
 			else
 				return linkStyle.getSize()+maxDim;
-		});
-		
+		});	
 	},
 
 	/*******************************************
@@ -2456,8 +2453,7 @@ metExploreD3.GraphNode = {
 				.style("stroke", metExploreD3.GraphNode.groupFill)
 				.style("stroke-width", 40)
 				.style("stroke-linejoin", "round")
-				.style("opacity", .15)
-				
+				.style("opacity", .15)			
 	},
 	
 	/*******************************************
@@ -2471,5 +2467,4 @@ metExploreD3.GraphNode = {
 				node.fixed=node.isLocked();
 			})		
 	}
-
 }

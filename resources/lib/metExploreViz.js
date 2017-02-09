@@ -829,6 +829,7 @@ var metExploreViz = function(panel, webSite){
     this.linkedByTypeOfMetabolite = false;
     this.parentWebSite = webSite;
     this.oldCoodinates = [];
+    this.useDegreeOfInterest = false;
 
     // Dispatch the event.
     metExploreD3.fireEventArg('networkPanel', "afterlunch", panel);
@@ -851,15 +852,22 @@ metExploreViz.prototype = {
         this.newBioSource = bool;
     },
 
+    useDegreeOfInterest:function(){
+        return this.useDegreeOfInterest;
+    },
+    setUseDegreeOfInterest:function(bool){
+        this.useDegreeOfInterest = bool;
+    },
+
     getBiosource:function()
     {
        return this.biosource;
     }, 
-    
     setBiosource:function(biosource)
     {
        this.biosource = biosource;
     },
+
     getDataFromWebSite : function(){
         return this.dataFromWebSite;
     },
@@ -922,6 +930,11 @@ metExploreViz.prototype = {
             else
                 sel = undefined;
 
+            if(n.isDisplayed()!=undefined)
+                displayed = n.isDisplayed().valueOf();
+            else
+                displayed = undefined;
+
             if(n.getLabelVisible()!=undefined)
                 lv = n.getLabelVisible().valueOf();
             else
@@ -982,7 +995,13 @@ metExploreViz.prototype = {
                 comp = n.getCompartment().valueOf();
             else
                 comp = undefined;
-            
+
+            if(n.isDisplayed()!=undefined)
+                displayed = n.isDisplayed().valueOf();
+            else
+                displayed = undefined;
+
+
             if(n.getDbIdentifier()!=undefined)
                 dbId = n.getDbIdentifier().valueOf();
             else

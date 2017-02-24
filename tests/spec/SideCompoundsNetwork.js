@@ -7,7 +7,7 @@ describe("Test session network after duplicating side compounds", function() {
 	//Calls to beforeEach, it, and afterEach can take an optional single argument that should be called when the async work is complete.
 	beforeEach(function(done) {
   		originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-      	jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+      	jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
       	MetExploreViz.initFrame("visu");
   		done();
   	});

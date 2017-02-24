@@ -16,6 +16,7 @@ Ext.define('metExploreViz.view.button.buttonImportToNetwork.ButtonImportToNetwor
 
 		view.lookupReference('importNetwork').on({
 			change: function () {
+				console.log(view.lookupReference('importNetwork').fileInputEl.dom);
 				metExploreD3.GraphUtils.handleFileSelect(view.lookupReference('importNetwork').fileInputEl.dom, metExploreD3.GraphPanel.refreshPanel);
             },
             scope : me

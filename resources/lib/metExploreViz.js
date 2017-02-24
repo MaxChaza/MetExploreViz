@@ -12,6 +12,7 @@ var metExploreD3 = {
     GraphNode:"",
     Features:"",
     user:"",
+    Ext:Ext,
     testWSMappingGraphToken : function(token, inchis, pathways, func) {
        
         var data={

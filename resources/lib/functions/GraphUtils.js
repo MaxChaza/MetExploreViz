@@ -213,24 +213,24 @@ metExploreD3.GraphUtils = {
     * Export a metabolic network in PNG. 
     * You can choice the png
     */
-	exportPNG : function(){
+	exportPNG : function(func){
 	    metExploreD3.GraphUtils.escapeUnExportNode();
 
 		window.URL = (window.URL || window.webkitURL);
 
-		metExploreD3.GraphUtils.initialize('png');
+		metExploreD3.GraphUtils.initialize('png', func);
 	},
 
 	/*******************************************
     * Export a metabolic network in JPG. 
     * You can choice the png
     */
-	exportJPG : function(){
+	exportJPG : function(func){
 		metExploreD3.GraphUtils.escapeUnExportNode();
 		
 		window.URL = (window.URL || window.webkitURL);
 
-		metExploreD3.GraphUtils.initialize('jpeg');
+		metExploreD3.GraphUtils.initialize('jpeg', func);
 	},
 
 	/*******************************************
@@ -283,23 +283,19 @@ metExploreD3.GraphUtils = {
     * Export a metabolic network in SVG. 
     * You can choice the svg
     */
-	exportSVG : function(){
+	exportSVG : function(func){
 
 		metExploreD3.GraphUtils.escapeUnExportNode();
 		
 		window.URL = (window.URL || window.webkitURL);
 
-		var stringSvg = metExploreD3.GraphUtils.initialize("svg");
-		
-		//metExploreD3.GraphNetwork.loadSvg(metExploreD3.getSessionById(metExploreD3.getSessionsSet(), 'viz'), 'viz');
-
-		// var html = d3.select("#viz").select("svg");
+		metExploreD3.GraphUtils.initialize("svg", func);
 	},
 
 	/*******************************************
     * Initialize exportSVG  
     */
-	initialize : function(type){
+	initialize : function(type, func){
 		var session = _metExploreViz.getSessionById('viz');
 		var force = session.getForce();
 		if(session!=undefined) 
@@ -370,9 +366,9 @@ metExploreD3.GraphUtils = {
 				parent.removeChild(emptySvg);
 
 				if (SVGSources.length > 1) {
-				  metExploreD3.GraphUtils.createPopover(SVGSources, type);
+				  metExploreD3.GraphUtils.createPopover(SVGSources, type, func);
 				} else if (SVGSources.length > 0) {
-				  return metExploreD3.GraphUtils.download(SVGSources[0], type);
+				  metExploreD3.GraphUtils.download(SVGSources[0], type, func);
 				} else {
 				  alert("Couldn’t find any SVG nodes.");
 				}
@@ -383,7 +379,7 @@ metExploreD3.GraphUtils = {
 	/*******************************************
     * Permit to make a choice between all networks  
     */
-	createPopover : function(sources, type) {
+	createPopover : function(sources, type, func) {
 		metExploreD3.GraphUtils.cleanup();
 
 		sources.forEach(function(s1) {
@@ -446,7 +442,7 @@ metExploreD3.GraphUtils = {
 		  button.textContent = "Download";
 
 		  button.onclick = function(el) {
-		    metExploreD3.GraphUtils.download(d, type);
+		    metExploreD3.GraphUtils.download(d, type, func);
 		  };
 
 		});
@@ -790,10 +786,10 @@ metExploreD3.GraphUtils = {
      * @param {} uri: file or data to download
      * @param {} filename: default filename of the downloaded file
      */
-    saveAsSvg: function(uri, filename) {
+    saveAsSvg: function(uri, filename, func) {
 		var link = document.createElement('a');
 		if (typeof link.download === 'string') {
-		    link.href = uri;
+			link.href = uri;
 		    link.download = filename;
 		
 		    //Firefox requires the link to be in the body
@@ -820,6 +816,9 @@ metExploreD3.GraphUtils = {
 					force.start();
 			}	
 		}
+
+		if(typeof func == 'function')
+			func(filename);
 	},
 
 	binaryblob : function(canvas, type){
@@ -845,7 +844,7 @@ metExploreD3.GraphUtils = {
      * @param {} uri: file or data to download
      * @param {} filename: default filename of the downloaded file
      */
-    saveAsBinary: function(source, filename, type) {
+    saveAsBinary: function(source, filename, type, func) {
 		var imgsrc = 'data:image/svg+xml;base64,'+ window.btoa(unescape(encodeURIComponent(source.source)));
 
 		var canvas = document.createElement('canvas');
@@ -860,13 +859,12 @@ metExploreD3.GraphUtils = {
 
 		context = canvas.getContext("2d");
 		var image = new Image();
-		
 		image.onload = function() {
 			var myMask = metExploreD3.createLoadMask("Export in progress...", source.parent);
-			if(myMask!= undefined){
+            if(myMask!= undefined){
 
-				metExploreD3.showMask(myMask);
-				metExploreD3.deferFunction(function() {
+                metExploreD3.showMask(myMask);
+                metExploreD3.deferFunction(function() {
 					context.drawImage(image, 0, 0, source.width*4, source.height*4);
 
 					var newurl = metExploreD3.GraphUtils.binaryblob(canvas, type);
@@ -904,6 +902,9 @@ metExploreD3.GraphUtils = {
 								force.start();
 						}	
 					}
+                    if(typeof func == 'function')
+                    	func(filename);
+
 				}, 100);
 			}
 		};
@@ -913,7 +914,7 @@ metExploreD3.GraphUtils = {
 	/*******************************************
     * Download the svg
     */
-	download : function(source, type) {
+	download : function(source, type, func) {
 
 	    var today = new Date();
 		var dd = today.getDate();
@@ -931,16 +932,15 @@ metExploreD3.GraphUtils = {
 		today = mm+'-'+dd+'-'+yyyy;
 
 		if(type=='jpeg' || type=='png')
-			metExploreD3.GraphUtils.saveAsBinary(source, "MetExploreViz_"+today+"."+type, type);
+			metExploreD3.GraphUtils.saveAsBinary(source, "MetExploreViz_"+today+"."+type, type, func);
 		
 		if(type=='svg'){
 			var blob = new Blob([source.source], {type: "data:image/svg+xml"}); // pass a useful mime type here
 			var url = URL.createObjectURL(blob);
-			metExploreD3.GraphUtils.saveAsSvg(url, "MetExploreViz_"+today+".svg");
+			metExploreD3.GraphUtils.saveAsSvg(url, "MetExploreViz_"+today+".svg", func);
 		}
 	
 		metExploreD3.GraphUtils.cleanup();
-
 	},
 
 	/*******************************************

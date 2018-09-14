@@ -833,6 +833,7 @@ metExploreD3.GraphNode = {
   		 		
 			if(d3.select("#"+panel).select("#D3viz").select("#graphComponent")
 					.selectAll("g.node")
+					.selectAll(".reaction")
 					.filter(function(node){return d.getId()==node.getId();}).text()=="")
 	        {
 	        	d3.select("#"+panel).select("#D3viz").select("#graphComponent")
@@ -2292,6 +2293,7 @@ metExploreD3.GraphNode = {
 							return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                         })
                         .style("stroke", "green")
+						.filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                         .style("stroke-width", "1.5");
 
                     links.filter(function(link){return d.getId()==link.getTarget().getId();})
@@ -2304,6 +2306,7 @@ metExploreD3.GraphNode = {
                             return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                         })
                         .style("stroke", "red")
+                        .filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                         .style("stroke-width", "1.5");
                 }
                 else
@@ -2317,6 +2320,7 @@ metExploreD3.GraphNode = {
                             return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                         })
                         .style("stroke", "red")
+                        .filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                         .style("stroke-width", "1.5");
 
                     links.filter(function(link){return d.getId()==link.getTarget().getId();})
@@ -2328,6 +2332,7 @@ metExploreD3.GraphNode = {
                             return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                         })
                         .style("stroke", "green")
+                        .filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                         .style("stroke-width", "1.5");
                 }
             })
@@ -2412,11 +2417,11 @@ metExploreD3.GraphNode = {
                     })
                     .style("stroke",linkStyle.getStrokeColor())
                     .style("stroke-width", "0.5").each(function(){
-                    var linksover = d3.select(this.parentNode).selectAll("path.link");
-                    var first = linksover[0][0];
-                    this.parentNode.insertBefore(this, first);
-                });
-
+						var linksover = d3.select(this.parentNode).selectAll("path.link");
+						var first = linksover[0][0];
+						this.parentNode.insertBefore(this, first);
+					})
+					.filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode });
 
                 if(d.getBiologicalType()=="reaction"){
                     d3.select(this).selectAll("rect").selectAll(".reaction, .fontSelected").transition()

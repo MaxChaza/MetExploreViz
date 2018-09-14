@@ -79,5 +79,18 @@ d3.selection.enter.prototype =
 			.style("text-anchor", 'middle')
 			.attr("y",minDim/2+5);
 
+        this.append("svg:text")
+            .style("font-size", '12px')
+            .attr("class", "fluxlabel")
+            .attr("id", "flux")
+            .attr("transform", "translate(10, -10)")
+            .classed('hide', true)
+            .style("paint-order", "stroke")
+            .style("fill", "black")
+            .style("stroke", "white")
+            .style("stroke-opacity", "0.7")
+            .attr("dy", ".4em")
+            .style("font-weight", 'bold')
+            .style("pointer-events", 'none');
 	};
 

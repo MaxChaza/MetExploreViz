@@ -835,6 +835,7 @@ metExploreD3.GraphNode = {
   		 		
 			if(d3.select("#"+panel).select("#D3viz").select("#graphComponent")
 					.selectAll("g.node")
+					.selectAll(".reaction")
 					.filter(function(node){return d.getId()==node.getId();}).text()=="")
 	        {
 	        	d3.select("#"+panel).select("#D3viz").select("#graphComponent")
@@ -2204,6 +2205,7 @@ metExploreD3.GraphNode = {
 							return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                         })
                         .style("stroke", "green")
+						.filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                         .style("stroke-width", "1.5");
 
                     links.filter(function(link){return d.getId()==link.getTarget().getId();})
@@ -2211,6 +2213,7 @@ metExploreD3.GraphNode = {
                             return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                         })
                         .style("stroke", "red")
+                        .filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                         .style("stroke-width", "1.5");
                 }
                 else
@@ -2220,6 +2223,7 @@ metExploreD3.GraphNode = {
                             return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                         })
                         .style("stroke", "red")
+                        .filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                         .style("stroke-width", "1.5");
 
                     links.filter(function(link){return d.getId()==link.getTarget().getId();})
@@ -2227,6 +2231,7 @@ metExploreD3.GraphNode = {
                             return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                         })
                         .style("stroke", "green")
+                        .filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                         .style("stroke-width", "1.5");
                 }
             })
@@ -2309,6 +2314,7 @@ metExploreD3.GraphNode = {
                         return d3.select(this).style("stroke") !== "rgb(0, 0, 255)";
                     })
                     .style("stroke",linkStyle.getStrokeColor())
+                    .filter(function (t) { return !metExploreD3.GraphStyleEdition.editMode })
                     .style("stroke-width", "0.5");
 
                 if(d.getBiologicalType()=="reaction"){

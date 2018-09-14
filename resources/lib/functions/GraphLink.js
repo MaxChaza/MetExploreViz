@@ -1418,6 +1418,40 @@ metExploreD3.GraphLink = {
         metExploreD3.GraphNetwork.tick('viz');
     },
 
+    showValues : function(parent, conditionName, fluxType){
+        d3.select("#" + parent).select("#D3viz").select("#graphComponent").selectAll("g.node").filter(function (t) { return t.getBiologicalType()==="reaction" })
+            .select('.fluxlabel')
+            .text(function (reaction) {
+
+                var mappingName = _metExploreViz.getSessionById("viz").getActiveMapping();
+                var mapping = _metExploreViz.getMappingByName(mappingName);
+                var conditions = mapping.getConditions();
+
+                var map1 = reaction.getMappingDataByNameAndCond(mappingName, conditions[0]);
+                var map2 = reaction.getMappingDataByNameAndCond(mappingName, conditions[1]);
+                var map = map1;
+
+                if (map == null)
+                    var flux = 0;
+                else {
+                    if (isNaN(map.getMapValue()))
+                        var flux = 0;
+                    else
+                        var flux =  Number.parseFloat(map.getMapValue()).toFixed(2);
+                }
+                if (map2 == null)
+                    var sd = "";
+                else {
+                    if (isNaN(map2.getMapValue()))
+                        var sd = "";
+                    else
+                        var sd = " σ"+Number.parseFloat(map2.getMapValue()).toFixed(2);
+                }
+                return flux + sd;
+            })
+            .classed('hide', true);
+    },
+
     showValue : function(parent, conditionName, fluxType){
         d3.select("#" + parent).select("#D3viz").select("#graphComponent").selectAll(".linkGroup")
             .append("svg:text")
@@ -1469,7 +1503,7 @@ metExploreD3.GraphLink = {
             .style("paint-order", "stroke")
             .style("stroke-width", 1)
             .style("stroke", function () {
-                return d3.select(this.parentNode).select("path#link").style('fill');
+                return d3.select(this.parentNode).select("path.link").style('fill');
             })
             .style("stroke-opacity", "0.7")
             .attr("dy", ".4em")
@@ -2029,27 +2063,6 @@ metExploreD3.GraphLink = {
                 return node.getBiologicalType()=="reaction";
             });
         var links = d3.select("#"+panel).select("#D3viz").select("#graphComponent").selectAll("path.link");
-        // Create arrowhead marker
-        d3.select("#"+panel).select("#D3viz").select("#graphComponent").append("defs").append("marker")
-            .attr("id", "markerExit")
-            .attr("viewBox", "-10 -5 20 20")
-            .attr("refX", 9).attr("refY", 6)
-            .attr("markerUnits", "userSpaceOnUse")
-            .attr("markerWidth", 15).attr("markerHeight", 10)
-            .attr("orient", "auto")
-            .attr("fill", "green").attr("stroke", "black")
-            .append("path")
-            .attr("d", "M0,6L-5,12L9,6L-5,0L0,6");
-        d3.select("#"+panel).select("#D3viz").select("#graphComponent").append("defs").append("marker")
-            .attr("id", "markerEntry")
-            .attr("viewBox", "-10 -5 20 20")
-            .attr("refX", 9).attr("refY", 6)
-            .attr("markerUnits", "userSpaceOnUse")
-            .attr("markerWidth", 15).attr("markerHeight", 10)
-            .attr("orient", "auto")
-            .attr("fill", "red").attr("stroke", "black")
-            .append("path")
-            .attr("d", "M0,6L-5,12L9,6L-5,0L0,6");
 
         reactions.each(function (node) {
             var enteringLinks = links.filter(function (link) {
@@ -2129,6 +2142,20 @@ metExploreD3.GraphLink = {
 
             // For each node, compute the path of the arcs exiting that node, and the path of the arcs exiting that node
             enteringLinks.each(function (link) {
+                // Create arrowhead marker
+
+                d3.select("#"+panel).select("#D3viz").select("#graphComponent").append("defs").append("marker")
+                    .attr("id", "markerEntry"+link.getId().replace(/ /g, "_"))
+                    .attr("class", "markerEntry")
+                    .attr("stroke-linejoin", "miter")
+                    .attr("viewBox", "-10 -5 20 20")
+                    .attr("refX", 9).attr("refY", 6)
+                    .attr("markerUnits", "userSpaceOnUse")
+                    .attr("markerWidth", 15).attr("markerHeight", 10)
+                    .attr("orient", "auto")
+                    .attr("fill", "red").attr("stroke", "black")
+                    .append("path")
+                    .attr("d", "M0,6L-5,12L9,6L-5,0L0,6");
                 var path;
                 // Handle the case where the link is a cycle arc or a sibling of cycle arc
                 if (link.partOfCycle === true){
@@ -2148,8 +2175,25 @@ metExploreD3.GraphLink = {
                     .style("opacity", 1);
             }).filter(function (link) {
                 return link.getTarget().getReactionReversibility();
-            }).attr("marker-end", "url(#markerEntry)");
+            }).attr("marker-end", function (link) {
+                return "url(#markerEntry"+link.getId().replace(/ /g, "_")+")";
+            });
+
+
             exitingLinks.each(function (link) {
+                // Create arrowhead marker
+                d3.select("#"+panel).select("#D3viz").select("#graphComponent").append("defs").append("marker")
+                    .attr("id", "markerExit"+link.getId().replace(/ /g, "_"))
+                    .attr("class", "markerExit")
+                    .attr("viewBox", "-10 -5 20 20")
+                    .attr("refX", 9).attr("refY", 6)
+                    .attr("markerUnits", "userSpaceOnUse")
+                    .attr("markerWidth", 15).attr("markerHeight", 10)
+                    .attr("orient", "auto")
+                    .attr("stroke-linejoin", "miter")
+                    .attr("fill", "green").attr("stroke", "black")
+                    .append("path")
+                    .attr("d", "M0,6L-5,12L9,6L-5,0L0,6");
                 var path;
                 if (link.partOfCycle === true){
                     path = d3.select(this).attr("d");
@@ -2167,10 +2211,110 @@ metExploreD3.GraphLink = {
                 d3.select(this).attr("d", path)
                     .attr("fill", "none")
                     .style("opacity", 1);
-            }).attr("marker-end", "url(#markerExit)");
+            }).attr("marker-end", function (link) {
+                return "url(#markerExit"+link.getId().replace(/ /g, "_")+")";
+            });
         });
         //
         metExploreD3.GraphCaption.drawCaptionEditMode();
+    },
+
+    mapFluxesOnLink : function(){
+        var panel = "viz";
+
+        var mappingName = _metExploreViz.getSessionById('viz').getActiveMapping();
+        var conditions = _metExploreViz.getSessionById(panel).isMapped();
+        var map1, map2;
+        var maxValue = undefined;
+
+        d3.select("#" + panel).select("#D3viz").select("#graphComponent").selectAll(".linklabel")
+            .attr("x", function (d) {
+                return (d.source.x + d.target.x) / 2;
+            })
+            .attr("y", function (d) {
+                return (d.source.y + d.target.y) / 2;
+            });
+
+        var colors = _metExploreViz.getSessionById('viz').getColorMappingsSet();
+        colors.forEach(function (color) {
+            if (maxValue === undefined | color.getName() > maxValue) maxValue = color.getName();
+        });
+
+        var scaleValue = d3.scale.linear()
+            .domain([-maxValue, 0, 0, maxValue])
+            .range([-6, -1, 1, 6]);
+
+        d3.select("#graphComponent").selectAll("path.link").each(function(link, i){
+            var reaction=null;
+            if(link.getTarget().getBiologicalType()==="reaction")
+                reaction=link.getTarget();
+
+            if(link.getSource().getBiologicalType()==="reaction")
+                reaction=link.getSource();
+
+            if(reaction!==null){
+
+                console.log("mappingName", mappingName);
+                console.log("conditions", conditions);
+                map1 = reaction.getMappingDataByNameAndCond(mappingName, conditions[0]);
+                map2 = reaction.getMappingDataByNameAndCond(mappingName, conditions[1]);
+                // Check whether to use linear flux value or discretized value
+                var map1Value;
+                var map2Value;
+                if (map1 !== null){
+                    map1Value = map1.getMapValue();
+                    if (map1.hasOwnProperty('binnedMapValue')) {
+                        map1Value = map1.binnedMapValue;
+                    }
+                    console.log("map1Value", map1Value);
+                    if (isNaN(map1Value))
+                        var value = 0;
+                    else
+                        var value = scaleValue(map1Value);
+
+                    console.log(map1Value);
+                    console.log(value);
+                }
+                else
+                {
+                    var value = 0;
+                }
+                // if (map2 !== null){
+                //     map2Value = map2.getMapValue();
+                //     if (map2.hasOwnProperty('binnedMapValue')) {
+                //         map2Value = map2.binnedMapValue;
+                //     }
+                // }
+                if(value===0){
+                    d3.select("#graphComponent").select("#markerExit" + link.getId().replace(/ /g, "_"))
+                        .attr("markerWidth", 8)
+                        .attr("markerHeight", 5)
+                        .style("stroke-width", "1px");
+
+                    d3.select("#graphComponent").select("#markerEntry" + link.getId().replace(/ /g, "_"))
+                        .attr("markerWidth", 8)
+                        .attr("markerHeight", 5)
+                        .style("stroke-width", "1px");
+
+                    d3.select(this).style("stroke-width", "1px").style("stroke-dasharray", "4").style("stroke-opacity", "0.8");
+                }
+                else {
+                    d3.select("#graphComponent").select("#markerExit" + link.getId().replace(/ /g, "_"))
+                        .attr("markerWidth", 8 * value)
+                        .attr("markerHeight", 5 * value)
+                        .style("stroke-width", value + "px");
+
+                    d3.select("#graphComponent").select("#markerEntry" + link.getId().replace(/ /g, "_"))
+                        .attr("markerWidth", 8 * value)
+                        .attr("markerHeight", 5 * value)
+                        .style("stroke-width", value + "px");
+
+                    d3.select(this).style("stroke-width", value + "px").style("stroke-dasharray", "none");
+                }
+            }
+        })
+        metExploreD3.GraphLink.showValues("viz", conditions[0], "Unique");
+
     },
 
     /*******************************************

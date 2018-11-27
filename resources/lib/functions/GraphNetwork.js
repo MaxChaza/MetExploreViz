@@ -141,7 +141,7 @@ metExploreD3.GraphNetwork = {
             function(panelLinked, sessionLinked) {
                 var scale = metExploreD3.getScaleById(panelLinked);
                 var session = _metExploreViz.getSessionById(panelLinked);
-				if(d3EventScale<0.3) d3.select("#"+panelLinked).select("#D3viz").select("#graphComponent").selectAll('text').classed("hide", true);
+				if(d3EventScale<0.3) d3.select("#"+panelLinked).select("#D3viz").select("#graphComponent").selectAll('text.reaction').classed("hide", true);
 				else d3.select("#"+panelLinked).select("#D3viz").select("#graphComponent").selectAll('text').classed("hide", false);
 
 
@@ -967,6 +967,7 @@ metExploreD3.GraphNetwork = {
  		metExploreD3.GraphNode.colorStoreByCompartment(metExploreD3.GraphNode.node);
 
         metExploreD3.GraphLink.pathwaysOnLink(panel);
+        metExploreD3.GraphLink.fluxesOnLink(panel);
         metExploreD3.GraphCaption.majCaptionPathwayOnLink();
         // reinitialize
 		metExploreD3.GraphStyleEdition.allDrawnCycles = [];
@@ -1469,7 +1470,7 @@ metExploreD3.GraphNetwork = {
 		var linkStyle = metExploreD3.getLinkStyle();
 		var force = session.getForce();
 
-		var flux = _metExploreViz.getSessionById(panel).getMappingDataType()=="Flux";
+		var flux = _metExploreViz.getSessionById(panel).getMappingDataType()=="Compare flux";
 
 		var map = {};
 

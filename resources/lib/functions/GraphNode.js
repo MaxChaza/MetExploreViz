@@ -833,14 +833,14 @@ metExploreD3.GraphNode = {
   		 		
 			if(d3.select("#"+panel).select("#D3viz").select("#graphComponent")
 					.selectAll("g.node")
-					.selectAll(".reaction")
-					.filter(function(node){return d.getId()==node.getId();}).text()=="")
+					.filter(function(node){return d.getId()==node.getId();}).select("text")=="")
 	        {
 	        	d3.select("#"+panel).select("#D3viz").select("#graphComponent")
 					.selectAll("g.node")
 					.filter(function(node){return d.getId()==node.getId();})
 					.addNodeText(reactionStyle);
-			}
+            }
+
             // set corresponding event handler
             var name = reactionStyle.getDisplayLabel(d, reactionStyle.getLabel());
             metExploreD3.GraphStyleEdition.changeNodeLabel(d, panel, name);
@@ -851,7 +851,7 @@ metExploreD3.GraphNode = {
                 metExploreD3.GraphStyleEdition.endDragLabel(panel);
                 metExploreD3.GraphNode.applyEventOnNode(panel);
             }
-		} 
+		}
 	},
 
 	/*******************************************
@@ -2067,7 +2067,7 @@ metExploreD3.GraphNode = {
 							if(networkData.getNodes().length < generalStyle.getReactionThreshold() || !generalStyle.isDisplayedLabelsForOpt())
 							{
 								d3.select(this)
-									.select("text")
+									.select("text.metabolite")
 									.remove();
 
 								metExploreD3.GraphNode.addText(node, "viz");

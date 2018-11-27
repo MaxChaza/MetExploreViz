@@ -164,7 +164,7 @@ metExploreD3.GraphStyleEdition = {
                             .selectAll("g.node")
                             .filter(function(node){
                                 return d.getDbIdentifier()==node.getDbIdentifier();
-                            }).select("text");
+                            }).select("text."+element.className.animVal);
 
                         if (theD3Node.attr("transform")) {
                             var transformScale = d3.transform(theD3Node.attr("transform")).scale;
@@ -488,6 +488,18 @@ metExploreD3.GraphStyleEdition = {
             if (node.labelFont.fontY) { selection.attr("y", node.labelFont.fontY); }
             if (node.labelFont.fontTransform) { selection.attr("transform", node.labelFont.fontTransform); }
         }
+
+        if (node.labelFluxPosition) {
+            var selection = d3.select("#"+panel).select("#D3viz").select("#graphComponent")
+                .selectAll("g.node")
+                .filter(function (d) {
+                    return d.getDbIdentifier() == node.getDbIdentifier();
+                })
+                .select("text.fluxlabel");
+            if (node.labelFluxPosition.x) { selection.attr("x", node.labelFluxPosition.x); }
+            if (node.labelFluxPosition.y) { selection.attr("y", node.labelFluxPosition.y); }
+            if (node.labelFluxPosition.transform) { selection.attr("transform", node.labelFluxPosition.transform); }
+        }
     },
 
     /*******************************************
@@ -513,6 +525,25 @@ metExploreD3.GraphStyleEdition = {
             };
         }
         return labelStyle;
+    },
+
+    /*******************************************
+     * Create an object containing the label style data associated to a node
+     * @param {Object} node : The node whose label syle data will be put in the object
+     */
+    createLabelFluxStyleObject : function (node, panel) {
+        var nodeLabel = d3.select("#"+panel).select("#D3viz").select("#graphComponent")
+            .selectAll("g.node")
+            .filter(function(d){return d.getDbIdentifier()==node.getDbIdentifier();})
+            .select("text.fluxlabel");
+        if(nodeLabel.length>0 && nodeLabel[0][0]!==null){
+            var labelFluxStyle = {
+                x : nodeLabel.attr("x"),
+                y : nodeLabel.attr("y"),
+                transform : nodeLabel.attr("transform")
+            };
+        }
+        return labelFluxStyle;
     },
 
     /*******************************************

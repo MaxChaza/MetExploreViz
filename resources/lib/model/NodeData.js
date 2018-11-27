@@ -23,7 +23,8 @@ var NodeData = function(
         lock, 
         alias, 
         label,
-        labelFont
+        labelFont,
+        labelFluxPosition
     ) {
         this.name=name;
         this.dbIdentifier = dbIdentifier ;
@@ -59,6 +60,7 @@ var NodeData = function(
         this.locked = lock;
         this.label= label;
         this.labelFont = labelFont;
+        this.labelFluxPosition = labelFluxPosition;
 };
 
 

@@ -357,7 +357,8 @@ NetworkData.prototype = {
             locked, 
             alias, 
             label,
-            labelFont
+            labelFont,
+            labelFluxPosition
         ){
         if(this.nodes == undefined)
             this.nodes = [];
@@ -383,7 +384,8 @@ NetworkData.prototype = {
             locked, 
             alias, 
             label,
-            labelFont);
+            labelFont,
+            labelFluxPosition);
         //console.log('ec '+ec);
         //console.log('ec '+object.getEC());
         this.nodes.push(object);
@@ -486,7 +488,8 @@ NetworkData.prototype = {
                         node.locked, 
                         node.alias,
                         node.label,
-                        node.labelFont
+                        node.labelFont,
+                        node.labelFluxPosition
                         );
 
                 }
@@ -513,7 +516,8 @@ NetworkData.prototype = {
                         node.locked, 
                         node.alias, 
                         node.label,
-                        node.labelFont);
+                        node.labelFont,
+                        node.labelFluxPosition);
                 }
                 if(node.mappingDatas!=undefined){
                     if(node.mappingDatas.length>0){

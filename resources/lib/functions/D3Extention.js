@@ -79,7 +79,16 @@ d3.selection.enter.prototype =
 			.style("text-anchor", 'middle')
 			.attr("y",minDim/2+5);
 
-        this.append("svg:text")
+        this.filter(function(d){ return d.getBiologicalType()==="reaction"; })
+			.append("svg:text")
+            .each(function(d) {
+                var el = d3.select(this);
+                var name = "";
+                el.text('');
+				var nameDOMFormat = $("<div/>").html(name).text();
+				var tspan = el.append('tspan').text(nameDOMFormat);
+				tspan.attr('x', 0).attr('dy', '10');
+            })
             .style("font-size", '12px')
             .attr("class", "fluxlabel")
             .attr("id", "flux")

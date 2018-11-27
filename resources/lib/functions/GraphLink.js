@@ -67,6 +67,22 @@ metExploreD3.GraphLink = {
             });
     },
 
+    fluxesOnLink: function (parent) {
+
+        d3.select("#"+parent).select("#D3viz").select("#graphComponent").selectAll("path.link.reaction")
+            .each(function(link){
+                var me = this;
+
+                var newelemt = me.cloneNode(true);
+                me.parentNode.appendChild(newelemt);
+                d3.select(newelemt).datum(link)
+                    .classed("reaction", false)
+                    .classed("flux", true)
+                    .classed("hide", true);
+
+            });
+    },
+
     //arrayValue already scale
     funcPathForFlux: function (link, panel, linkId) {
         var source, target, path, reaction;
@@ -1389,6 +1405,10 @@ metExploreD3.GraphLink = {
             .selectAll(".linkGroup")
             .remove();
 
+        d3.select("#" + parent).select("#D3viz").select("#graphComponent")
+            .selectAll(".fluxlabel")
+            .classed("hide", true);
+
         d3.select("#" + parent).select("#D3viz").select("#graphComponent").selectAll("path.link.reaction")
             .data(networkData.getLinks())
             .enter()
@@ -1431,7 +1451,7 @@ metExploreD3.GraphLink = {
 
     loadLinksForFlux: function (parent, networkData, linkStyle, metaboliteStyle, showValues, conditionName) {
         d3.select("#" + parent).select("#D3viz").select("#graphComponent").selectAll(".linkGroup").remove();
-        _metExploreViz.getSessionById(parent).setMappingDataType("Flux");
+        _metExploreViz.getSessionById(parent).setMappingDataType("Compare flux");
 
         var divs = d3.select("#" + parent).select("#D3viz").select("#graphComponent").selectAll("path.link.reaction")
             .data(networkData.getLinks())
@@ -1469,11 +1489,10 @@ metExploreD3.GraphLink = {
         metExploreD3.GraphNetwork.tick('viz');
     },
 
-    showValues : function(parent, conditionName, fluxType){
+    showValues : function(parent){
         d3.select("#" + parent).select("#D3viz").select("#graphComponent").selectAll("g.node").filter(function (t) { return t.getBiologicalType()==="reaction" })
             .select('.fluxlabel')
-            .text(function (reaction) {
-
+            .each(function(reaction) {
                 var mappingName = _metExploreViz.getSessionById("viz").getActiveMapping();
                 var mapping = _metExploreViz.getMappingByName(mappingName);
                 var conditions = mapping.getConditions();
@@ -1498,9 +1517,16 @@ metExploreD3.GraphLink = {
                     else
                         var sd = " σ"+Number.parseFloat(map2.getMapValue()).toFixed(2);
                 }
-                return flux + sd;
+                var el = d3.select(this);
+                var text = flux + sd;
+                el.text('');
+                var nameDOMFormat = $("<div/>").html(text).text();
+                var tspan = el.append('tspan').text(nameDOMFormat);
+                if (i > 0)
+                    tspan.attr('x', 0).attr('dy', '10');
+
             })
-            .classed('hide', true);
+            .classed('hide', false);
     },
 
     showValue : function(parent, conditionName, fluxType){
@@ -1946,7 +1972,7 @@ metExploreD3.GraphLink = {
             .attr("d", _metExploreViz.getSessionById(panel).groupPath)
             .attr("transform", d3.select("#"+panel).select("#D3viz").select("#graphComponent").attr("transform"));
         if (metExploreD3.GraphStyleEdition.curvedPath == true){
-            var flux = _metExploreViz.getSessionById(panel).getMappingDataType()=="Flux";
+            var flux = _metExploreViz.getSessionById(panel).getMappingDataType()=="Compare flux";
             if(flux) {
                 funcPath = metExploreD3.GraphLink.funcPathForFlux;
                 d3.select("#"+panel).select("#D3viz").select("#graphComponent")
@@ -1959,7 +1985,7 @@ metExploreD3.GraphLink = {
             }
         }
         else {
-            var flux = _metExploreViz.getSessionById(panel).getMappingDataType()=="Flux";
+            var flux = _metExploreViz.getSessionById(panel).getMappingDataType()=="Compare flux";
             if(flux) {
                 funcPath = metExploreD3.GraphLink.funcPathForFlux;
             }

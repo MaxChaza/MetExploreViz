@@ -1452,6 +1452,7 @@ metExploreD3.GraphUtils = {
 					   	}
 
 				    	networkJSON+="\"labelFont\":"+JSON.stringify(metExploreD3.GraphStyleEdition.createLabelStyleObject(node, key))+",";
+				    	networkJSON+="\"labelFluxPosition\":"+JSON.stringify(metExploreD3.GraphStyleEdition.createLabelFluxStyleObject(node, key))+",";
                         var imagePosition = metExploreD3.GraphStyleEdition.createImageStyleObject(node, key);
                         if (imagePosition != undefined) {
                             networkJSON += "\"imagePosition\":" + JSON.stringify(imagePosition) + ",";

@@ -60,7 +60,7 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 
 		view.lookupReference('selectConditionType').on({
 			change : function(that, newVal){
-				if(newVal=="Flux"){
+				if(newVal=="Compare flux" || newVal=="Flux" ){
 					view.lookupReference('opacity').setHidden(false);  
 					view.lookupReference('valueonarrow').setHidden(false);
                     view.lookupReference('regroupValuesIntoClass').setHidden(false);
@@ -108,7 +108,7 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 		view.lookupReference('selectCondition').on({
 			change : function(that, newVal, old){
 				var type = view.lookupReference('selectConditionType').lastValue;
-				if(type!=="Flux"){
+				if(type!=="Compare flux"){
 					if(old)
 					{
 						var i = newVal.indexOf(old[0]);
@@ -217,7 +217,7 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 				        }
 				    }
                     var container;
-					if(session.getMappingDataType()==="Flux"|| Array.isArray(session.isMapped()))
+					if(session.getMappingDataType()==="Compare flux"|| Array.isArray(session.isMapped()))
 						container = Ext.getCmp('panel'+session.isMapped()[0].replace(me.regexpPanel, ""));
 					else
                         container = Ext.getCmp('panel'+session.isMapped().replace(me.regexpPanel, ""));
@@ -311,7 +311,7 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 		        }
 		    }
             var container;
-			if(session.getMappingDataType()==="Flux"|| Array.isArray(session.isMapped()))
+			if(session.getMappingDataType()==="Compare flux"|| Array.isArray(session.isMapped()))
 				container = Ext.getCmp('panel'+session.isMapped()[0].replace(me.regexpPanel, ""));
 			else
 				container = Ext.getCmp('panel'+session.isMapped().replace(me.regexpPanel, ""));
@@ -400,7 +400,7 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
                 this.removeGraphMapping(oldMapping);
                 colorStore = session.getColorMappingsSet();
 
-                if(type==="flux"|| Array.isArray(session.isMapped()))
+                if(type==="Compare flux"|| Array.isArray(session.isMapped()))
                     container = Ext.getCmp('panel'+session.isMapped()[0].replace(me.regexpPanel, ""));
                 else
                     container = Ext.getCmp('panel'+session.isMapped().replace(me.regexpPanel, ""));
@@ -476,6 +476,11 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
             session.setMappingDataType(dataType);
         }
 
+        if(dataType==="Compare flux"){
+            metExploreD3.GraphMapping.graphMappingCompareFlux(mappingName, conditionName, fluxType, undefined, undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+            session.setMappingDataType(dataType);
+        }
+
         if(dataType==="Flux"){
             metExploreD3.GraphMapping.graphMappingFlux(mappingName, conditionName, fluxType, undefined, undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
             session.setMappingDataType(dataType);
@@ -517,7 +522,7 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 		}
 
         var cond;
-        if(type==="flux" || Array.isArray(selectedCondition))
+        if(type==="Compare flux" || Array.isArray(selectedCondition))
 			cond = selectedCondition[0];
 		else
 			cond = selectedCondition;
@@ -537,7 +542,7 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 
 			    	var colorName = color.getName();
 			    	var value = colorName;
-			    	if(type==="flux")
+			    	if(type==="Compare flux")
 			    		value = selectedCondition[i];
 			    	i++;
 			    	var newId = colorName.toString().replace(me.regexpPanel, "_");
@@ -745,15 +750,27 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 									}
 								}
 								else {
-									var fluxType;
-									if (selectedCondition.length === 1) {
-										fluxType = 'Unique';
-										metExploreD3.GraphMapping.graphMappingFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(color).getValue(), undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+									if(type === "flux"){
+                                        if (networkVizSession.getColorMappingsSet()[1]) {
+                                            metExploreD3.GraphMapping.graphMappingFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(color).getValue(), undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+                                        }
+                                        else {
+                                            metExploreD3.GraphMapping.graphMappingFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(color).getValue(), undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+                                        }
 									}
-									else {
-										fluxType = 'Compare';
-										metExploreD3.GraphMapping.graphMappingFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(maxValue).getValue(), networkVizSession.getColorMappingById(minValue).getValue(), Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+									else
+									{
+                                        var fluxType;
+                                        if (selectedCondition.length === 1) {
+                                            fluxType = 'Unique';
+                                            metExploreD3.GraphMapping.graphMappingCompareFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(color).getValue(), undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+                                        }
+                                        else {
+                                            fluxType = 'Compare';
+                                            metExploreD3.GraphMapping.graphMappingCompareFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(maxValue).getValue(), networkVizSession.getColorMappingById(minValue).getValue(), Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+                                        }
 									}
+
 								}
 							}
 						}

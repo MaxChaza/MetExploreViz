@@ -1432,6 +1432,21 @@ metExploreD3.GraphLink = {
             .style("opacity", 1)
             .style("stroke-dasharray", null);
 
+        d3.select("#" + parent).select("#D3viz").select("#graphComponent").selectAll("path.link.reaction")
+            .each(function (link) {
+                d3.select("#graphComponent").select("#markerExit" + link.getId().replace(/ /g, "_"))
+                    .attr("markerWidth", 15).attr("markerHeight", 10)
+                    .attr("stroke", "black")
+                    .style("stroke-width", "1px");
+
+                d3.select("#graphComponent").select("#markerEntry" + link.getId().replace(/ /g, "_"))
+                    .attr("markerWidth", 15).attr("markerHeight", 10)
+                    .attr("stroke", "black")
+                    .style("stroke-width", "1px");
+            });
+
+
+
         // d3.select("#"+parent).select("#D3viz").select("#graphComponent").selectAll(".linkGroup")
         //     .append("svg:text")
         //     .style("font-size",'6px')

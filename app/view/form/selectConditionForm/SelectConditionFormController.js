@@ -299,8 +299,8 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 
            // Remove mapping caption
 			var oldMapping = session.isMapped();
-
-			this.removeGraphMapping(oldMapping);
+			if(oldMapping!=="false" && oldMapping)
+				this.removeGraphMapping(oldMapping);
 
 			if(session.getMappingDataType()==="Continuous"){
 				var colorStore = session.getColorMappingsSet();
@@ -480,7 +480,6 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
             metExploreD3.GraphMapping.graphMappingCompareFlux(mappingName, conditionName, fluxType, undefined, undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
             session.setMappingDataType(dataType);
         }
-
         if(dataType==="Flux"){
             metExploreD3.GraphMapping.graphMappingFlux(mappingName, conditionName, fluxType, undefined, undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
             session.setMappingDataType(dataType);
@@ -751,11 +750,12 @@ Ext.define('metExploreViz.view.form.selectConditionForm.SelectConditionFormContr
 								}
 								else {
 									if(type === "flux"){
+
                                         if (networkVizSession.getColorMappingsSet()[1]) {
-                                            metExploreD3.GraphMapping.graphMappingFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(color).getValue(), undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+                                            metExploreD3.GraphMapping.graphMappingFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(maxValue).getValue(), networkVizSession.getColorMappingById(minValue).getValue(), Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
                                         }
                                         else {
-                                            metExploreD3.GraphMapping.graphMappingFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(color).getValue(), undefined, Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
+                                            metExploreD3.GraphMapping.graphMappingFlux(mapp, selectedCondition, fluxType, networkVizSession.getColorMappingById(maxValue).getValue(), networkVizSession.getColorMappingById(minValue).getValue(), Ext.getCmp("opacityCheck").checked, Ext.getCmp("valueonarrowCheck").checked, Ext.getCmp('regroupValuesIntoClassCheck').checked);
                                         }
 									}
 									else
